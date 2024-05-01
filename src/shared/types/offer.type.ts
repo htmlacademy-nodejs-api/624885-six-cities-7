@@ -1,10 +1,10 @@
-import { Category } from './category.type.js';
+import { CategoryType } from './category.type.js';
 import { CityType } from './city.type.js';
-import { Goods } from './goods.type.js';
+import { GoodsType } from './goods.type.js';
 import { LocationType } from './location.type.js';
-import { User } from './user.type.js';
+import { UserType } from './user.type.js';
 
-export type Offer = {
+export type OfferType = {
   name: string;
   description: string;
   postDate: Date;
@@ -14,12 +14,12 @@ export type Offer = {
   isPremium: boolean;
   isFavorite: boolean;
   rating: number;
-  category: Category;
+  category: CategoryType;
   roomsNumber: number;
   maxGuestsNumber: number;
   price: number;
-  goods: Goods[];
-  author: User;
+  goods: GoodsType[];
+  author: UserType;
   numberOfComments: number;
   location: LocationType;
 };

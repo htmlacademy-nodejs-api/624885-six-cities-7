@@ -1,4 +1,4 @@
-export enum Goods {
+export enum GoodsType {
   Breakfast = 'Breakfast',
   AirConditioning = 'Air conditioning',
   Laptop = 'Laptop friendly workspace',
