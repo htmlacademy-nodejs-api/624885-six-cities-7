@@ -7,6 +7,7 @@ import { GoodsType } from '../../types/goods.type.js';
 import { LocationType } from '../../types/location.type.js';
 import { OfferType } from '../../types/offer.type.js';
 import { UserType } from '../../types/user.type.js';
+import { stringToBoolean } from '../utils.js';
 import { FileReader } from './file-reader.interface.js';
 
 export class TSVFileReader implements FileReader {
@@ -24,7 +25,7 @@ export class TSVFileReader implements FileReader {
 
   private parseRawDataToOffers(): OfferType[] {
     return this.rawData
-      .split('/n')
+      .split('\n')
       .filter((row) => row.trim().length > 0)
       .map((line) => this.parseLineToOffer(line));
   }
@@ -52,7 +53,7 @@ export class TSVFileReader implements FileReader {
       userIsPro,
       numberOfCommentsString,
       locationString
-    ] = line.split('/t');
+    ] = line.split('\t');
 
     return {
       name,
@@ -61,8 +62,8 @@ export class TSVFileReader implements FileReader {
       city: this.parseCity(cityName),
       previewImage,
       offerImages: offerPictures.split(';'),
-      isPremium: Boolean(isPremiumString),
-      isFavorite: Boolean(isFavoriteString),
+      isPremium: stringToBoolean(isPremiumString),
+      isFavorite: stringToBoolean(isFavoriteString),
       rating: Number(ratingString),
       category: CategoryType[categoryString as 'Apartment' | 'House' | 'Room' | 'Hotel'],
       roomsNumber: Number(roomsNumberString),
@@ -78,7 +79,7 @@ export class TSVFileReader implements FileReader {
   private parseCity(cityName: string): CityType {
     const city = CITIES.find((cityItem) => cityItem.name === cityName);
     if(!city) {
-      throw new Error('City not founded');
+      throw new Error('City not found');
     }
 
     return {
@@ -110,7 +111,7 @@ export class TSVFileReader implements FileReader {
       email: userEmail,
       avatar: userAvatar,
       password: userPassword,
-      isPro: Boolean(userIsPro)
+      isPro: stringToBoolean(userIsPro)
     };
   }
 
