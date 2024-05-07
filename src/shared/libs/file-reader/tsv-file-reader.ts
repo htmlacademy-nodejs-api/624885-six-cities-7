@@ -95,7 +95,7 @@ export class TSVFileReader implements FileReader {
     const goodsArray: GoodsType[] = [];
     goodsString.split(';').forEach((good) => {
       goodsArray.push(
-        GoodsType[good as 'Breakfast', 'AirConditioning', 'Laptop', 'BabySeat', 'Washer', 'Towels', 'Fridge']
+        GoodsType[good as 'Breakfast' | 'AirConditioning' | 'Laptop' | 'BabySeat' | 'Washer' | 'Towels' | 'Fridge']
       );
     });
     return goodsArray;
