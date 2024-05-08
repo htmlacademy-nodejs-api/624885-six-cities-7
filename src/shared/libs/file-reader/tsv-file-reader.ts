@@ -1,5 +1,5 @@
 import EventEmitter from 'node:events';
-import { createReadStream } from 'node:fs';
+import { createReadStream,ReadStream } from 'node:fs';
 
 import { CITIES } from '../../consts.js';
 import { CategoryType } from '../../types/category.type.js';
@@ -12,26 +12,17 @@ import { stringToBoolean } from '../utils.js';
 import { FileReader } from './file-reader.interface.js';
 
 export class TSVFileReader extends EventEmitter implements FileReader {
-  private rawData = '';
   private CHUNK_SIZE = 16384; // 16 KB
+  private readStream: ReadStream;
 
   constructor(
     private readonly filename: string
   ){
     super();
-  }
-
-  private validateRawData(): void {
-    if(! this.rawData) {
-      throw new Error('File was not read');
-    }
-  }
-
-  private parseRawDataToOffers(): OfferType[] {
-    return this.rawData
-      .split('\n')
-      .filter((row) => row.trim().length > 0)
-      .map((line) => this.parseLineToOffer(line));
+    this.readStream = createReadStream(this.filename, {
+      highWaterMark: this.CHUNK_SIZE,
+      encoding: 'utf-8'
+    });
   }
 
   private parseLineToOffer(line: string): OfferType {
@@ -129,16 +120,11 @@ export class TSVFileReader extends EventEmitter implements FileReader {
   }
 
   public async read(): Promise<void> {
-    const readStream = createReadStream(this.filename, {
-      highWaterMark: this.CHUNK_SIZE,
-      encoding: 'utf-8'
-    });
-
     let remainingData = '';
     let nextLinePosition = -1;
     let importedRowCount = 0;
 
-    for await (const chunk of readStream) {
+    for await (const chunk of this.readStream) {
       remainingData += chunk.toString();
 
       while ((nextLinePosition = remainingData.indexOf('\n')) >= 0) {
@@ -151,10 +137,5 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       }
     }
     this.emit('end', importedRowCount);
-  }
-
-  public toArray(): OfferType[] {
-    this.validateRawData();
-    return this.parseRawDataToOffers();
   }
 }
