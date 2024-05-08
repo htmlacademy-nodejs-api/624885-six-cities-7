@@ -65,7 +65,7 @@ export class TSVFileReader implements FileReader {
       isPremium: stringToBoolean(isPremiumString),
       isFavorite: stringToBoolean(isFavoriteString),
       rating: Number(ratingString),
-      category: CategoryType[categoryString as 'Apartment' | 'House' | 'Room' | 'Hotel'],
+      category: CategoryType[categoryString as keyof typeof CategoryType],
       roomsNumber: Number(roomsNumberString),
       maxGuestsNumber: Number(maxGuestsNumberString),
       price: Number(priceString),
@@ -95,7 +95,7 @@ export class TSVFileReader implements FileReader {
     const goodsArray: GoodsType[] = [];
     goodsString.split(';').forEach((good) => {
       goodsArray.push(
-        GoodsType[good as 'Breakfast' | 'AirConditioning' | 'Laptop' | 'BabySeat' | 'Washer' | 'Towels' | 'Fridge']
+        GoodsType[good as keyof typeof GoodsType]
       );
     });
     return goodsArray;
