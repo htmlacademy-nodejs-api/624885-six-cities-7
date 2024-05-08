@@ -1,4 +1,5 @@
-import { readFileSync } from 'node:fs';
+import EventEmitter from 'node:events';
+import { createReadStream } from 'node:fs';
 
 import { CITIES } from '../../consts.js';
 import { CategoryType } from '../../types/category.type.js';
@@ -10,12 +11,15 @@ import { UserType } from '../../types/user.type.js';
 import { stringToBoolean } from '../utils.js';
 import { FileReader } from './file-reader.interface.js';
 
-export class TSVFileReader implements FileReader {
+export class TSVFileReader extends EventEmitter implements FileReader {
   private rawData = '';
+  private CHUNK_SIZE = 16384; // 16 KB
 
   constructor(
     private readonly filename: string
-  ){}
+  ){
+    super();
+  }
 
   private validateRawData(): void {
     if(! this.rawData) {
@@ -124,8 +128,29 @@ export class TSVFileReader implements FileReader {
     };
   }
 
-  public read(): void {
-    this.rawData = readFileSync(this.filename, {encoding: 'utf-8'});
+  public async read(): Promise<void> {
+    const readStream = createReadStream(this.filename, {
+      highWaterMark: this.CHUNK_SIZE,
+      encoding: 'utf-8'
+    });
+
+    let remainingData = '';
+    let nextLinePosition = -1;
+    let importedRowCount = 0;
+
+    for await (const chunk of readStream) {
+      remainingData += chunk.toString();
+
+      while ((nextLinePosition = remainingData.indexOf('\n')) >= 0) {
+        const completeRow = remainingData.slice(0, nextLinePosition + 1);
+        remainingData = remainingData.slice(++nextLinePosition);
+        importedRowCount++;
+
+        const parsedOffer = this.parseLineToOffer(completeRow);
+        this.emit('line', parsedOffer);
+      }
+    }
+    this.emit('end', importedRowCount);
   }
 
   public toArray(): OfferType[] {
