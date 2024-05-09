@@ -2,17 +2,12 @@ import EventEmitter from 'node:events';
 import { createReadStream,ReadStream } from 'node:fs';
 
 import { CITIES } from '../../consts.js';
-import { CategoryType } from '../../types/category.type.js';
-import { CityType } from '../../types/city.type.js';
-import { GoodsType } from '../../types/goods.type.js';
-import { LocationType } from '../../types/location.type.js';
-import { OfferType } from '../../types/offer.type.js';
-import { UserType } from '../../types/user.type.js';
+import { CategoryType, CityType, GoodsType, LocationType, OfferType, UserCategoryType,UserType} from '../../types/index.js';
 import { stringToBoolean } from '../utils.js';
 import { FileReader } from './file-reader.interface.js';
 
 export class TSVFileReader extends EventEmitter implements FileReader {
-  private CHUNK_SIZE = 16384; // 16 KB
+  private readonly CHUNK_SIZE = 16384;
   private readStream: ReadStream;
 
   constructor(
@@ -45,7 +40,7 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       userEmail,
       userAvatar,
       userPassword,
-      userIsPro,
+      userType,
       numberOfCommentsString,
       locationString
     ] = line.split('\t');
@@ -65,7 +60,7 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       maxGuestsNumber: Number(maxGuestsNumberString),
       price: Number(priceString),
       goods: this.parseGoods(goodsString),
-      author: this.parseUser(userName, userEmail, userAvatar, userPassword, userIsPro),
+      author: this.parseUser(userName, userEmail, userAvatar, userPassword, userType),
       numberOfComments: Number(numberOfCommentsString),
       location: this.parseLocation(locationString)
     };
@@ -100,13 +95,13 @@ export class TSVFileReader extends EventEmitter implements FileReader {
     userEmail: string,
     userAvatar: string,
     userPassword: string,
-    userIsPro: string): UserType {
+    userType: string): UserType {
     return {
       name: userName,
       email: userEmail,
       avatar: userAvatar,
       password: userPassword,
-      isPro: stringToBoolean(userIsPro)
+      userType: UserCategoryType[userType as keyof typeof UserCategoryType]
     };
   }
 
