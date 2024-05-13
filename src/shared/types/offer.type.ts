@@ -1,8 +1,4 @@
-import { CategoryType } from './category.type.js';
-import { CityType } from './city.type.js';
-import { GoodsType } from './goods.type.js';
-import { LocationType } from './location.type.js';
-import { UserType } from './user.type.js';
+import { CategoryType, CityType, GoodsType, LocationType,UserType } from './index.js';
 
 export type OfferType = {
   name: string;
