@@ -6,7 +6,7 @@ import { Logger } from '../logger/logger.interface.js';
 import { DatabaseClient } from './index.js';
 
 @injectable()
-export class MongooseDatabaseClient implements DatabaseClient {
+export class MongoDatabaseClient implements DatabaseClient {
   private mongoose: typeof Mongoose;
   private isConnected: boolean;
 
