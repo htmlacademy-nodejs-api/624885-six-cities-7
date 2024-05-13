@@ -12,3 +12,5 @@ coverage
 /mocks/tsv/
 /logs/
 .env
+docker-compose.yml
+
