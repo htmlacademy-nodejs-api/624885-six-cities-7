@@ -39,7 +39,6 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       userName,
       userEmail,
       userAvatar,
-      userPassword,
       userType,
       numberOfCommentsString,
       locationString
@@ -60,7 +59,7 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       maxGuestsNumber: Number(maxGuestsNumberString),
       price: Number(priceString),
       goods: this.parseGoods(goodsString),
-      author: this.parseUser(userName, userEmail, userAvatar, userPassword, userType),
+      author: this.parseUser(userName, userEmail, userAvatar, userType),
       numberOfComments: Number(numberOfCommentsString),
       location: this.parseLocation(locationString)
     };
@@ -94,13 +93,11 @@ export class TSVFileReader extends EventEmitter implements FileReader {
   private parseUser(userName: string,
     userEmail: string,
     userAvatar: string,
-    userPassword: string,
     userType: string): UserType {
     return {
       name: userName,
       email: userEmail,
       avatar: userAvatar,
-      password: userPassword,
       userType: UserCategoryType[userType as keyof typeof UserCategoryType]
     };
   }
