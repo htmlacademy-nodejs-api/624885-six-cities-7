@@ -1,3 +1,5 @@
+import { setTimeout } from 'node:timers/promises';
+
 import { inject, injectable } from 'inversify';
 import * as Mongoose from 'mongoose';
 
@@ -38,7 +40,7 @@ export class MongoDatabaseClient implements DatabaseClient {
         return;
       } catch(error) {
         this.logger.error(`Failed to connect to the database. Attempt ${attempt}`, error as Error);
-        await setTimeout(()=>{},RETRY_TIMEOUT);
+        await setTimeout(RETRY_TIMEOUT);
       }
     }
 

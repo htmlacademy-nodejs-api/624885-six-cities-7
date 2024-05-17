@@ -17,7 +17,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements UserType {
   public name: string;
 
   @prop({ required: true })
-  private password: string;
+  private password?: string;
 
   @prop({ required: true })
   public userType: UserCategoryType;
