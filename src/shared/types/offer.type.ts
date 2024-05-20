@@ -1,4 +1,4 @@
-import { CategoryType, CityType, GoodsType, LocationType,UserType } from './index.js';
+import { CategoryType, CityType, GoodsType, LocationType, UserType } from './index.js';
 
 export type OfferType = {
   name: string;
@@ -15,7 +15,7 @@ export type OfferType = {
   maxGuestsNumber: number;
   price: number;
   goods: GoodsType[];
-  author: UserType;
+  user: UserType;
   numberOfComments: number;
   location: LocationType;
 };

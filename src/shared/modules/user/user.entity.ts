@@ -1,10 +1,17 @@
-import { defaultClasses ,getModelForClass, prop } from '@typegoose/typegoose';
+import { defaultClasses ,getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
 
 import { createSHA256 } from '../../helpers/index.js';
 import { UserCategoryType, UserType } from '../../types/index.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface UserEntity extends defaultClasses.Base {}
+
+@modelOptions({
+  schemaOptions: {
+    collection: 'users',
+    timestamps: true,
+  }
+})
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class UserEntity extends defaultClasses.TimeStamps implements UserType {
   @prop({ unique: true, required: true })
@@ -19,7 +26,11 @@ export class UserEntity extends defaultClasses.TimeStamps implements UserType {
   @prop({ required: true })
   private password?: string;
 
-  @prop({ required: true })
+  @prop({
+    required: true,
+    type: () => String,
+    enum: UserCategoryType
+  })
   public userType: UserCategoryType;
 
   constructor(userData: UserType) {
