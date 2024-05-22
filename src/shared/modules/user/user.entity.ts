@@ -13,7 +13,7 @@ export interface UserEntity extends defaultClasses.Base {}
   }
 })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class UserEntity extends defaultClasses.TimeStamps implements UserType {
+export class UserEntity implements UserType {
   @prop({ unique: true, required: true })
   public email: string;
 
@@ -34,7 +34,6 @@ export class UserEntity extends defaultClasses.TimeStamps implements UserType {
   public userType: UserCategoryType;
 
   constructor(userData: UserType) {
-    super();
     this.email = userData.email;
     this.avatar = userData.avatar;
     this.name = userData.name;

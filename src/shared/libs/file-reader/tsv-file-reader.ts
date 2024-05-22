@@ -59,7 +59,7 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       maxGuestsNumber: Number(maxGuestsNumberString),
       price: Number(priceString),
       goods: this.parseGoods(goodsString),
-      author: this.parseUser(userName, userEmail, userAvatar, userType),
+      user: this.parseUser(userName, userEmail, userAvatar, userType),
       numberOfComments: Number(numberOfCommentsString),
       location: this.parseLocation(locationString)
     };
@@ -125,7 +125,9 @@ export class TSVFileReader extends EventEmitter implements FileReader {
         importedRowCount++;
 
         const parsedOffer = this.parseLineToOffer(completeRow);
-        this.emit('line', parsedOffer);
+        await new Promise((resolve) => {
+          this.emit('line', parsedOffer, resolve);
+        });
       }
     }
     this.emit('end', importedRowCount);

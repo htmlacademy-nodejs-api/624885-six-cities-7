@@ -1,4 +1,4 @@
-import { CategoryType, CityType, GoodsType, LocationType, UserType } from '../../../types/index.js';
+import { CategoryType, CityType, GoodsType, LocationType } from '../../../types/index.js';
 
 export class CreateOfferDTO {
   public name: string;
@@ -15,7 +15,7 @@ export class CreateOfferDTO {
   public maxGuestsNumber: number;
   public price: number;
   public goods: GoodsType[];
-  public user: UserType;
+  public user: string;
   public numberOfComments: number;
   public location: LocationType;
 }
