@@ -1,7 +1,10 @@
 import chalk from 'chalk';
 
-import { DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD } from '../../shared/consts.js';
+import { DEFAULT_USER_PASSWORD } from '../../shared/consts.js';
 import { getErrorMessage, getMongoURI } from '../../shared/helpers/index.js';
+import { Config } from '../../shared/libs/config/config.interface.js';
+import { RestConfig } from '../../shared/libs/config/rest.config.js';
+import { RestSchema } from '../../shared/libs/config/rest.schema.js';
 import { DatabaseClient, MongoDatabaseClient } from '../../shared/libs/database-client/index.js';
 import { TSVFileReader } from '../../shared/libs/file-reader/tsv-file-reader.js';
 import { Logger, PinoLogger } from '../../shared/libs/logger/index.js';
@@ -15,6 +18,7 @@ export class ImportCommand implements Command {
   private offerService: OfferService;
   private databaseClient: DatabaseClient;
   private logger: Logger;
+  private config: Config<RestSchema>;
   private salt: string;
 
   constructor() {
@@ -25,6 +29,7 @@ export class ImportCommand implements Command {
     this.databaseClient = new MongoDatabaseClient(this.logger);
     this.offerService = new DefaultOfferService(this.logger, OfferModel);
     this.userService = new DefaultUserService(this.logger, UserModel);
+    this.config = new RestConfig(this.logger);
   }
 
   private async onImportedOffer(offer: OfferType, resolve: () => void) {
@@ -69,12 +74,18 @@ export class ImportCommand implements Command {
   }
 
   public async execute(...parameters: string[]): Promise<void> {
-    const [filename, login, password, host, dbname, salt] = parameters;
+    const [filename] = parameters;
     const fileReader = new TSVFileReader(filename.trim());
-    const uri = getMongoURI(login, password, host, DEFAULT_DB_PORT, dbname);
+    const mongoURI = getMongoURI(
+      this.config.get('DB_USER'),
+      this.config.get('DB_PASSWORD'),
+      this.config.get('DB_HOST'),
+      this.config.get('DB_PORT'),
+      this.config.get('DB_NAME')
+    );
 
-    this.salt = salt;
-    await this.databaseClient.connect(uri);
+    this.salt = this.config.get('SALT');
+    await this.databaseClient.connect(mongoURI);
 
     fileReader.on('line', this.onImportedOffer);
     fileReader.on('end', this.onCompleteImport);
