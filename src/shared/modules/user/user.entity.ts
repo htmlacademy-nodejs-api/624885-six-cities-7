@@ -1,5 +1,6 @@
 import { defaultClasses ,getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
 
+import { DEFAULT_USER_AVATAR } from '../../consts.js';
 import { createSHA256 } from '../../helpers/index.js';
 import { UserCategoryType, UserType } from '../../types/index.js';
 
@@ -35,7 +36,7 @@ export class UserEntity implements UserType {
 
   constructor(userData: UserType) {
     this.email = userData.email;
-    this.avatar = userData.avatar;
+    this.avatar = userData.avatar ?? DEFAULT_USER_AVATAR;
     this.name = userData.name;
     this.userType = userData.userType;
   }
