@@ -53,3 +53,6 @@ export const CITIES: CityType[] = [
     }
   }
 ];
+
+export const DEFAULT_USER_PASSWORD = '123456';
+export const DEFAULT_USER_AVATAR = 'avatar.jpg';

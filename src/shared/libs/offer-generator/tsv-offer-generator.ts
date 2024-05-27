@@ -4,9 +4,14 @@ import { CITIES } from '../../consts.js';
 import { generateRandomValue, getRandomItem, getRandomItems } from '../../helpers/common.js';
 import { CategoryType, CityType, GoodsType, MockServerDataType } from '../../types/index.js';
 import {
-  FIRST_INDEX, FIRST_WEEK_DAY, LAST_INDEX, LAST_WEEK_DAY, MAX_ADULTS, MAX_COMMENTS, MAX_PRICE, MAX_RATING,
-  MAX_ROOMS_COUNT, MIN_ADULTS, MIN_COMMENTS, MIN_PRICE, MIN_RATING, MIN_ROOMS_COUNT, NUMBER_OF_PHOTOS, RATING_DECIMAL_NUMBERS_COUNT
-} from './consts.js';
+  ADULTS_COUNT,
+  COMMENTS_COUNT,
+  INDEX,
+  LOCATION_SHIFT,
+  NUMBER_OF_PHOTOS, PRICE, RATING,
+  RATING_DECIMAL_NUMBERS_COUNT,
+  ROOMS_COUNT,
+  WEEK_DAY} from './consts.js';
 import { OfferGenerator } from './offer-generator.interface.js';
 
 export class TSVOfferGenerator implements OfferGenerator {
@@ -18,24 +23,24 @@ export class TSVOfferGenerator implements OfferGenerator {
     const name = getRandomItem<string>(this.mockData.names);
     const description = getRandomItem<string>(this.mockData.descriptions);
     const postDate = dayjs()
-      .subtract(generateRandomValue(FIRST_WEEK_DAY, LAST_WEEK_DAY), 'day')
+      .subtract(generateRandomValue(WEEK_DAY.FIRST, WEEK_DAY.LAST), 'day')
       .toISOString();
     const city = getRandomItem<CityType>(CITIES);
-    const previewImage = `preview-image-${generateRandomValue(FIRST_INDEX, LAST_INDEX)}.jpg`;
+    const previewImage = `preview-image-${generateRandomValue(INDEX.FIRST, INDEX.LAST)}.jpg`;
     const offerImages = Array.from({length: NUMBER_OF_PHOTOS},
-      () => (`photo-${generateRandomValue(FIRST_INDEX, LAST_INDEX)}.jpg`)).join(';');
+      () => (`photo-${generateRandomValue(INDEX.FIRST, INDEX.LAST)}.jpg`)).join(';');
     const isPremium = getRandomItem<string>(['true', 'false']);
     const isFavorite = getRandomItem<string>(['true', 'false']);
-    const rating = generateRandomValue(MIN_RATING, MAX_RATING, RATING_DECIMAL_NUMBERS_COUNT).toString();
+    const rating = generateRandomValue(RATING.MIN, RATING.MAX, RATING_DECIMAL_NUMBERS_COUNT).toString();
     const category = getRandomItem<string>([
       CategoryType.Apartment,
       CategoryType.Hotel,
       CategoryType.House,
       CategoryType.Room
     ]);
-    const roomsNumber = generateRandomValue(MIN_ROOMS_COUNT, MAX_ROOMS_COUNT).toString();
-    const maxGuestsNumber = generateRandomValue(MIN_ADULTS, MAX_ADULTS).toString();
-    const price = generateRandomValue(MIN_PRICE, MAX_PRICE).toString();
+    const roomsNumber = generateRandomValue(ROOMS_COUNT.MIN, ROOMS_COUNT.MAX).toString();
+    const maxGuestsNumber = generateRandomValue(ADULTS_COUNT.MIN, ADULTS_COUNT.MAX).toString();
+    const price = generateRandomValue(PRICE.MIN, PRICE.MAX).toString();
     const goods = getRandomItems<string>([
       GoodsType.AirConditioning,
       GoodsType.BabySeat,
@@ -47,18 +52,16 @@ export class TSVOfferGenerator implements OfferGenerator {
     ]).join(';');
     const userName = getRandomItem<string>(this.mockData.userNames);
     const userEmail = getRandomItem<string>(this.mockData.userEmails);
-    const userAvatar = `avatar-${generateRandomValue(FIRST_INDEX, LAST_INDEX)}.jpg`;
-    const userPassword = generateRandomValue(1000000, 99000000).toString();
+    const userAvatar = `avatar-${generateRandomValue(INDEX.FIRST, INDEX.LAST)}.jpg`;
     const userType = getRandomItem<string>(['BASIC', 'PRO']);
-    const numberOfComments = generateRandomValue(MIN_COMMENTS, MAX_COMMENTS).toString();
-    const locationLatitudeDifference = generateRandomValue(-10000, 10000) / 100000;
-    const locationLongtitudeDifference = generateRandomValue(-10000, 10000) / 100000;
+    const numberOfComments = generateRandomValue(COMMENTS_COUNT.MIN, COMMENTS_COUNT.MAX).toString();
+    const locationLatitudeDifference = generateRandomValue(LOCATION_SHIFT.START, LOCATION_SHIFT.END) / LOCATION_SHIFT.DIV;
+    const locationLongtitudeDifference = generateRandomValue(LOCATION_SHIFT.START, LOCATION_SHIFT.END) / LOCATION_SHIFT.DIV;
     const location = `${city.location.latitude + locationLatitudeDifference};${city.location.longitude + locationLongtitudeDifference}`;
 
     return [
       name, description, postDate, city.name, previewImage, offerImages, isPremium, isFavorite,
-      rating, category, roomsNumber, maxGuestsNumber, price, goods, userName, userEmail, userAvatar,
-      userPassword, userType, numberOfComments, location
+      rating, category, roomsNumber, maxGuestsNumber, price, goods, userName, userEmail, userAvatar, userType, numberOfComments, location
     ].join('\t');
   }
 }
