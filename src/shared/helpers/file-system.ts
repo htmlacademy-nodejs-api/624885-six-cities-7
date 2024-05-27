@@ -1,7 +1,5 @@
-import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 
 export function getCurrentModuleDirectoryPath() {
-  const filepath = fileURLToPath(import.meta.url);
-  return dirname(filepath);
+  return resolve();
 }
