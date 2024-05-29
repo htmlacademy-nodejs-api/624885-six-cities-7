@@ -1,0 +1,192 @@
+openapi: 3.0.0
+info:
+  title: API server for Six Cities tutorial project.
+  version: 0.0.1
+  description: ""
+tags:
+  - name: offers
+    description: offers actions
+  - name: users
+    description: users actions
+  - name: comments
+    description: comments actions
+paths:
+  /offers:
+    get:
+      tags: [ 'offers' ]
+      description: Gets offers
+      responses:
+        '200':
+          description: OK
+    post:
+      tags: [ 'offers' ]
+      description: Create new offer
+      requestBody:
+        description: Info for offer creation
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createOffer"
+      responses:
+        '201':
+          description: Offer created
+  /users/login:
+    get:
+      tags:
+        - "users"
+      description: Get current user state
+      responses:
+        '200':
+          description: "User authorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user"
+        '401':
+          description: User not authorized
+    post:
+      tags:
+        - "users"
+      description: Login user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/loginUser"
+      responses:
+        '200':
+          description: User logged in
+        '401':
+          description: Wrong password
+        '404':
+          description: User not found
+  /users/register:
+    post:
+      tags:
+        - "users"
+      description: Register user
+      requestBody:
+        required: true
+        description: Данные для регистрации пользователя
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userWithPassword"
+      responses:
+        '201':
+          description: User registred
+        '409':
+          description: Email exists
+  /users/avatar:
+    post:
+      tags:
+        - users
+      description: Загружает изображение аватара пользователя. Изображение
+        аватара должно быть в формате `png` или `jpg`.
+      requestBody:
+        description: Путь до изображения
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                avatarPath:
+                  type: string
+                  example: "avatar.jpg"
+        required: true
+      responses:
+        '201':
+          description: Аватар пользователя установлен
+        '401':
+          description: Пользователь не авторизован
+        '404':
+          description: Пользователь с таким id не найден
+  /users/favorites:
+    get:
+      tags:
+        - users
+      description: Возвращает список избранных предложений пользователя
+      responses:
+        '200':
+          description: Список избранных предложений пользователя
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example: 6329c3d6a04ab1061c6425ea
+        '401':
+          description: Пользователь не авторизован
+    post:
+      tags:
+        - users
+      description: Добавляет предложение в список избранных пользователя
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                favoriteOfferId:
+                  type: string
+                  example: 6329c3d6a04ab1061c6425ea
+      responses:
+        '200':
+          description: Предложение добавлено в список избранного
+        '401':
+          description: Пользователь не авторизован
+
+components:
+  schemas:
+    createOffer:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Super offer
+    loginUser:
+      type: object
+      properties:
+        email:
+          type: string
+          example: keks@yandex.ru
+        password:
+          type: string
+          example: 12345
+    user:
+      type: object
+      properties:
+        name:
+          type: string
+          example: keks
+        email:
+          type: string
+          example: keks@yandex.ru
+        avatar:
+          type: string
+          example: "avatar.jpg"
+        userType:
+          type: string
+          enum:
+            - "обычный"
+            - "pro"
+    userWithPassword:
+      type: object
+      properties:
+        name:
+          type: string
+          example: keks
+        email:
+          type: string
+          example: keks@yandex.ru
+        avatar:
+          type: string
+          example: "avatar.jpg"
+        userType:
+          type: string
+          enum:
+            - "обычный"
+            - "pro"
+
+
