@@ -1,0 +1,494 @@
+openapi: 3.0.0
+info:
+  title: API server for Six Cities tutorial project.
+  version: 0.0.1
+  description: ""
+tags:
+  - name: offers
+    description: Действия с предложениями
+  - name: users
+    description: Действия с пользователями
+  - name: comments
+    description: Действия с комментариями
+paths:
+  /comments/{offerId}:
+    get:
+      tags:
+        - comments
+      description: Получение комментариев к предложению
+      parameters:
+        - in: path
+          name: offerId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Комментарии
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/comment"
+        '404':
+          description: Предложение не найдено
+    post:
+      tags:
+        - comments
+      description: Получение комментариев к предложению
+      parameters:
+        - in: path
+          name: offerId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Комментарий добавлен
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/comment"
+        '401':
+          description: Пользователь не авторизован
+        '404':
+          description: Предложение не найдено
+
+  /offers:
+    get:
+      tags: [ 'offers' ]
+      description: Получить предложения
+      parameters:
+        - in: query
+          name: count
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/offer"
+    post:
+      tags:
+        - offers
+      description: Создание нового предложения
+      requestBody:
+        description: Данные для создания нового предложения
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/detailOffer"
+      responses:
+        '201':
+          description: Предложение создано
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/detailOffer"
+        '400':
+          description: Ошибка создания предложения
+
+  /offers/premium/{city}:
+    get:
+      tags:
+        - offers
+      description: Получить предложения
+      parameters:
+        - in: path
+          name: city
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/detailOffer"
+        '404':
+          description: Город не найден
+
+  /offers/{offerId}:
+    get:
+      tags:
+        - offers
+      description: Детальная информация по предложению
+      parameters:
+        - in: path
+          name: offerId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Детальная информация по предложению
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/detailOffer"
+        '404':
+          description: Предложение не найдено
+    patch:
+      tags:
+        - offers
+      description: Обновление информации по предложению
+      parameters:
+        - in: path
+          name: offerId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Предложение обновлено
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/detailOffer"
+        '401':
+          description: Пользователь не авторизован
+        '404':
+          description: Предложение не найдено
+    delete:
+      tags:
+        - offers
+      description: Удаление предложения
+      parameters:
+        - in: path
+          name: offerId
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Предложение удалено
+        '401':
+          description: Пользователь не авторизован
+        '404':
+          description: Предложение не найдено
+
+  /users/login:
+    get:
+      tags:
+        - "users"
+      description: Проверка состояния пользователя
+      responses:
+        '200':
+          description: Пользователь авторизован
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user"
+        '401':
+          description: Пользователь не авторизован
+    post:
+      tags:
+        - "users"
+      description: Вход в закрытую часть приложения
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/loginUser"
+      responses:
+        '200':
+          description: Пользователь авторизован
+        '401':
+          description: Не правильный пароль
+        '404':
+          description: Пользователь не найден
+  /users/register:
+    post:
+      tags:
+        - "users"
+      description: Регистрация пользователя
+      requestBody:
+        required: true
+        description: Данные для регистрации пользователя
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userWithPassword"
+      responses:
+        '201':
+          description: Пользователь зарегистрирован
+        '409':
+          description: Почта уже существует
+  /users/avatar:
+    post:
+      tags:
+        - users
+      description: Загружает изображение аватара пользователя. Изображение
+        аватара должно быть в формате `png` или `jpg`.
+      requestBody:
+        description: Путь до изображения
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                avatarPath:
+                  type: string
+                  example: "avatar.jpg"
+        required: true
+      responses:
+        '201':
+          description: Аватар пользователя установлен
+        '401':
+          description: Пользователь не авторизован
+        '404':
+          description: Пользователь с таким id не найден
+  /users/favorites:
+    get:
+      tags:
+        - users
+      description: Возвращает список избранных предложений пользователя
+      responses:
+        '200':
+          description: Список избранных предложений пользователя
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example: 6329c3d6a04ab1061c6425ea
+        '401':
+          description: Пользователь не авторизован
+    post:
+      tags:
+        - users
+      description: Добавляет предложение в список избранных пользователя
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                favoriteOfferId:
+                  type: string
+                  example: 6329c3d6a04ab1061c6425ea
+      responses:
+        '200':
+          description: Предложение добавлено в список избранного
+        '401':
+          description: Пользователь не авторизован
+    delete:
+      tags:
+        - users
+      description: Удаляет предложение из списка избранных пользователя
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                favoriteOfferId:
+                  type: string
+                  example: 6329c3d6a04ab1061c6425ea
+      responses:
+        '200':
+          description: Предложение удалено из списка избранного
+        '401':
+          description: Пользователь не авторизован
+
+components:
+  schemas:
+    detailOffer:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Super offer
+        description:
+          type: string
+          example: Example description
+        postDate:
+          type: string
+          example: 2024-05-03T09:42:15.638Z
+        city:
+          type: string
+          example: Amsterdam
+        previewImage:
+          type: string
+          example: preview.jpg
+        offerImages:
+          type: array
+          items:
+            type: string
+          example: [photo1.jpg, photo2.jpg]
+        isPremium:
+          type: boolean
+          example: true
+        isFavorite:
+          type: boolean
+          example: false
+        rating:
+          type: number
+          minimum: 1
+          maximum: 5
+          example: 4.5
+        category:
+          type: string
+          enum:
+            - apartment
+            - house
+            - room
+            - hotel
+          example: room
+        roomsNumber:
+          type: number
+          minimum: 1
+          maximum: 8
+          example: 5
+        maxGuestsNumber:
+          type: number
+          minimum: 1
+          maximum: 10
+          example: 7
+        price:
+          type: number
+          minimum: 100
+          maximum: 100000
+          example: 12345
+        goods:
+          type: array
+          items:
+            type: string
+            enum:
+              - Breakfast
+              - Air conditioning
+              - Laptop friendly workspace
+              - Baby seat
+              - Washer
+              - Towels
+              - Fridge
+          example: [Breakfast, Washer, Fridge]
+        userId:
+          type: string
+          example: u2i34y2i
+        numberOfComments:
+          type: number
+          example: 150
+        location:
+          type: object
+          properties:
+            latitude:
+              type: number
+              example: 50.841061
+            longtitude:
+              type: number
+              example: 6.997344
+
+    offer:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Super offer
+        postDate:
+          type: string
+          example: 2024-05-03T09:42:15.638Z
+        city:
+          type: string
+          example: Amsterdam
+        previewImage:
+          type: string
+          example: preview.jpg
+        isPremium:
+          type: boolean
+          example: true
+        isFavorite:
+          type: boolean
+          example: false
+        rating:
+          type: number
+          minimum: 1
+          maximum: 5
+          example: 4.5
+        price:
+          type: number
+          minimum: 100
+          maximum: 100000
+          example: 12345
+        category:
+          type: string
+          enum:
+            - apartment
+            - house
+            - room
+            - hotel
+          example: room
+        numberOfComments:
+          type: number
+          example: 150
+
+    loginUser:
+      type: object
+      properties:
+        email:
+          type: string
+          example: keks@yandex.ru
+        password:
+          type: string
+          example: 12345
+    user:
+      type: object
+      properties:
+        name:
+          type: string
+          example: keks
+        email:
+          type: string
+          example: keks@yandex.ru
+        avatar:
+          type: string
+          example: "avatar.jpg"
+        userType:
+          type: string
+          enum:
+            - "обычный"
+            - "pro"
+
+    userWithPassword:
+      type: object
+      properties:
+        name:
+          type: string
+          example: keks
+        email:
+          type: string
+          example: keks@yandex.ru
+        avatar:
+          type: string
+          example: "avatar.jpg"
+        userType:
+          type: string
+          enum:
+            - "обычный"
+            - "pro"
+
+    comment:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Example comment
+        postDate:
+          type: string
+          example: 2024-05-05T09:42:15.639Z
+        rating:
+          type: number
+          minimum: 1
+          maximum: 5
+
+
