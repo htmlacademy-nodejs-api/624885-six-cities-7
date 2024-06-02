@@ -14,7 +14,7 @@ export interface CommentEntity extends defaultClasses.Base {}
 })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class CommentEntity {
-  @prop({required: true, minlength: 5, maxlength: 1024})
+  @prop({trim: true, required: true, minlength: 5, maxlength: 1024})
   public commentText: string;
 
   @prop({required: true, min: 1, max: 5})
@@ -24,13 +24,13 @@ export class CommentEntity {
     required: true,
     ref: UserEntity,
   })
-  public user!: Ref<UserEntity>;
+  public userId: Ref<UserEntity>;
 
   @prop({
     required: true,
     ref: OfferEntity
   })
-  public offer!: Ref<OfferEntity>;
+  public offerId: Ref<OfferEntity>;
 }
 
 export const CommentModel = getModelForClass(CommentEntity);
