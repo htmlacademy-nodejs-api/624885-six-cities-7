@@ -5,5 +5,6 @@ import { CommentEntity } from './index.js';
 
 export interface CommentService {
   create(dto: CreateCommentDto): Promise<DocumentType<CommentEntity>>
-  findByOfferId(offer: string): Promise<DocumentType<CommentEntity>[]>
+  findByOfferId(offerId: string): Promise<DocumentType<CommentEntity>[]>
+  deleteByOfferId(offerId: string): Promise<number | null>
 }
