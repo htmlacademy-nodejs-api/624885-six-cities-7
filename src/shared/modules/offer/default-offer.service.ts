@@ -57,6 +57,21 @@ export class DefaultOfferService implements OfferService {
       .findByIdAndDelete(offerId)
       .exec();
   }
+
+  public async incCommentCount(offerId: string): Promise<DocumentType<OfferEntity> | null> {
+    return this.offerModel
+      .findByIdAndUpdate(offerId, {'$inc': {numberOfComments: 1}})
+      .exec();
+  }
+
+  public async updateRating(offerId: string, rate: number): Promise<DocumentType<OfferEntity> | null> {
+    const offer = await this.offerModel.findById(offerId);
+    if(!offer) {
+      return null;
+    }
+    const newRating = ((offer.rating + rate) / offer.numberOfComments).toFixed(1);
+    return offer.updateOne({rating: newRating}, {new:true}).exec();
+  }
 }
 
 
