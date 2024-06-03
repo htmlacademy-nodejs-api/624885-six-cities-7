@@ -22,13 +22,13 @@ export class CommentEntity {
 
   @prop({
     required: true,
-    ref: UserEntity,
+    ref: () => UserEntity,
   })
   public userId: Ref<UserEntity>;
 
   @prop({
     required: true,
-    ref: OfferEntity
+    ref: () => OfferEntity
   })
   public offerId: Ref<OfferEntity>;
 }

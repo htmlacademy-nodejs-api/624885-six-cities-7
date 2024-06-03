@@ -1,7 +1,7 @@
 import { DocumentType, types } from '@typegoose/typegoose';
 import { inject } from 'inversify';
 
-import { NUMBER_OF_PREMIUM_OFFERS } from '../../consts.js';
+import { NUMBER_OF_PREMIUM_OFFERS, SortType } from '../../consts.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/component.enum.js';
 import { CreateOfferDTO } from './dto/create-offer.dto.js';
@@ -18,6 +18,7 @@ export class DefaultOfferService implements OfferService {
   public async find(offersCount = 60): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
       .find()
+      .sort({createdAt: SortType.Down})
       .limit(offersCount)
       .populate(['user'])
       .exec();
