@@ -1,4 +1,5 @@
 export {
+  fillDTO,
   generateRandomValue,
   getErrorMessage,
   getRandomItem,
