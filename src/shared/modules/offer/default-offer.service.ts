@@ -1,5 +1,5 @@
 import { DocumentType, types } from '@typegoose/typegoose';
-import { inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 
 import { NUMBER_OF_PREMIUM_OFFERS, SortType } from '../../consts.js';
 import { Logger } from '../../libs/logger/index.js';
@@ -9,6 +9,7 @@ import { UpdateOfferDto } from './dto/update-offer.dto.js';
 import { OfferEntity } from './offer.entity.js';
 import { OfferService } from './offer-service.interface.js';
 
+@injectable()
 export class DefaultOfferService implements OfferService {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,

@@ -2,9 +2,8 @@ import { Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { injectable } from 'inversify';
 
-import { Logger } from '../../logger/logger.interface.js';
-import { Route } from '../route.interface.js';
-import { Controller } from './controller.interface.js';
+import { Logger } from '../../logger/index.js';
+import { Controller, Route } from '../index.js';
 
 @injectable()
 export abstract class BaseController implements Controller{
