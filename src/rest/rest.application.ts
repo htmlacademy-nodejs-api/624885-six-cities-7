@@ -1,3 +1,4 @@
+import express, { Express } from 'express';
 import { inject, injectable} from 'inversify';
 
 import { getMongoURI } from '../shared/helpers/database.js';
@@ -8,11 +9,14 @@ import { Component } from '../shared/types/component.enum.js';
 
 @injectable()
 export class RestApplication {
+  private readonly server: Express;
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
     @inject(Component.Config) private readonly config: Config<RestSchema>,
     @inject(Component.DatabaseClient) private readonly databaseClient: DatabaseClient
-  ) {}
+  ) {
+    this.server = express();
+  }
 
   private async initDB() {
     const mongoURI = getMongoURI(
@@ -26,11 +30,21 @@ export class RestApplication {
     return this.databaseClient.connect(mongoURI);
   }
 
+  private async initServer() {
+    const port = this.config.get('PORT');
+
+    this.server.listen(port);
+  }
+
   public async init() {
     this.logger.info('Application initialization.');
 
     this.logger.info('Init database...');
     await this.initDB();
     this.logger.info('Init database completed.');
+
+    this.logger.info('Starting server...');
+    await this.initServer();
+    this.logger.info(`Server started on http://localhost:${this.config.get('PORT')}`);
   }
 }
