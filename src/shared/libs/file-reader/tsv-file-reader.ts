@@ -98,7 +98,8 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       name: userName,
       email: userEmail,
       avatar: userAvatar,
-      userType: UserCategoryType[userType as keyof typeof UserCategoryType]
+      userType: UserCategoryType[userType as keyof typeof UserCategoryType],
+      favorites: []
     };
   }
 

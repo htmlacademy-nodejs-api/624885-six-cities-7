@@ -34,6 +34,9 @@ export class UserEntity implements UserType {
   })
   public userType: UserCategoryType;
 
+  @prop({ required: true, default: []})
+  public favorites: string[];
+
   constructor(userData: UserType) {
     this.email = userData.email;
     this.avatar = userData.avatar ?? DEFAULT_USER_AVATAR;
