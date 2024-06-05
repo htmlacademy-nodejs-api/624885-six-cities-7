@@ -2,12 +2,14 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
 
+import { fillDTO } from '../../helpers/common.js';
 import { Config } from '../../libs/config/config.interface.js';
 import { RestSchema } from '../../libs/config/rest.schema.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { BaseController } from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
 import { HttpMethod } from '../../types/http-method.enum.js';
+import { UserRdo } from './rdo/user.rdo.js';
 import { UserService } from './user-service.interface.js';
 
 @injectable()
@@ -37,6 +39,6 @@ export class UserController extends BaseController {
     }
     const salt = this.config.get('SALT');
     const result = await this.userService.create(newUser, salt);
-    this.created(res, result);
+    this.created(res, fillDTO(UserRdo, result));
   }
 }
