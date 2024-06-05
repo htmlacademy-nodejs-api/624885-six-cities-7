@@ -32,6 +32,10 @@ export class RestApplication {
     return this.databaseClient.connect(mongoURI);
   }
 
+  private async initMiddleware() {
+    this.server.use(express.json());
+  }
+
   private async initServer() {
     const port = this.config.get('PORT');
 
@@ -48,6 +52,10 @@ export class RestApplication {
     this.logger.info('Init database...');
     await this.initDB();
     this.logger.info('Init database completed.');
+
+    this.logger.info('Init middleware...');
+    await this.initMiddleware();
+    this.logger.info('Init middleware completed.');
 
     this.logger.info('Init controllers...');
     await this.initControllers();
