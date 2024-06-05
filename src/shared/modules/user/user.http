@@ -14,7 +14,12 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:5000/users/login HTTP/1.1
+POST http://localhost:5000/users/login HTTP/1.1
 Content-Type: application/json
+
+{
+  "email": "ivnikon@mail.ru",
+  "password": "12345"
+}
 
 ###

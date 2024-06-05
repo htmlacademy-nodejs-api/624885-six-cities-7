@@ -23,7 +23,7 @@ export class UserController extends BaseController {
 
     this.logger.info('Register routes for UserController');
     this.addRoute({path: '/register', method: HttpMethod.Post, handler: this.create});
-    this.addRoute({path: '/login', method: HttpMethod.Get, handler: this.login});
+    this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login});
   }
 
   public async create(req: Request, res: Response): Promise<void> {
@@ -41,7 +41,20 @@ export class UserController extends BaseController {
     this.created(res, fillDTO(UserRdo, result));
   }
 
-  public async login(_req: Request, _res: Response): Promise<void> {
-    throw new Error('[UserController] Oops');
+  public async login(req: Request, _res: Response): Promise<void> {
+    const newUser = req.body;
+    const existUser = await this.userService.findByEmail(newUser.email);
+    if(!existUser) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        `User with email ${newUser.email} not found.`,
+        'UserController'
+      );
+    }
+    throw new HttpError(
+      StatusCodes.NOT_IMPLEMENTED,
+      'Not implemented yet',
+      'UserController'
+    );
   }
 }
