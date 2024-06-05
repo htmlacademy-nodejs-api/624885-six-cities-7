@@ -6,7 +6,7 @@ export class OffersRdo {
   @Expose()
   public name: string;
 
-  @Expose()
+  @Expose({ name: 'createdAt'})
   public postDate: Date;
 
   @Expose()

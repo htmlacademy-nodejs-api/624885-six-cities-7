@@ -22,12 +22,12 @@ export class DefaultOfferService implements OfferService {
       .find()
       .sort({createdAt: SortType.Down})
       .limit(offersCount)
-      .populate(['user'])
+      .populate(['userId'])
       .exec();
   }
 
   public async create(dto: CreateOfferDTO): Promise<DocumentType<OfferEntity>> {
-    const result = await this.offerModel.create({...dto, isFavorite: false});
+    const result = await this.offerModel.create({...dto, isFavorite: false, rating: 0, numberOfComments: 0});
     this.logger.info(`New offer created ${dto.name}`);
 
     return result;
@@ -44,14 +44,14 @@ export class DefaultOfferService implements OfferService {
   public async findById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findById(offerId)
-      .populate(['user'])
+      .populate(['userId'])
       .exec();
   }
 
   public async updateById(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findByIdAndUpdate(offerId, dto, {new: true})
-      .populate(['user'])
+      .populate(['userId'])
       .exec();
   }
 
