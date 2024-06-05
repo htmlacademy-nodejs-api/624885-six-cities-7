@@ -1,9 +1,10 @@
 import { DocumentType, types } from '@typegoose/typegoose';
 import { inject, injectable } from 'inversify';
 
-import { NUMBER_OF_PREMIUM_OFFERS, SortType } from '../../consts.js';
+import { SortType } from '../../consts.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/component.enum.js';
+import { NUMBER_OF_PREMIUM_OFFERS } from './consts.js';
 import { CreateOfferDTO } from './dto/create-offer.dto.js';
 import { UpdateOfferDto } from './dto/update-offer.dto.js';
 import { OfferEntity } from './offer.entity.js';
@@ -26,7 +27,7 @@ export class DefaultOfferService implements OfferService {
   }
 
   public async create(dto: CreateOfferDTO): Promise<DocumentType<OfferEntity>> {
-    const result = await this.offerModel.create(dto);
+    const result = await this.offerModel.create({...dto, isFavorite: false});
     this.logger.info(`New offer created ${dto.name}`);
 
     return result;

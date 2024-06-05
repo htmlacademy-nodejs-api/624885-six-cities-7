@@ -57,8 +57,6 @@ export const CITIES: CityType[] = [
 export const DEFAULT_USER_PASSWORD = '123456';
 export const DEFAULT_USER_AVATAR = 'avatar.jpg';
 
-export const NUMBER_OF_PREMIUM_OFFERS = 3;
-
 export const SortType = {
   Up: 1,
   Down: -1

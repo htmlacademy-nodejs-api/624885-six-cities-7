@@ -9,21 +9,17 @@ import { Controller, Route } from '../index.js';
 @injectable()
 export abstract class BaseController implements Controller{
   private readonly DEFAULT_CONTENT_TYPE = 'application/json';
-  private readonly _router: Router;
+  public readonly router: Router;
 
   constructor(
     protected readonly logger: Logger
   ){
-    this._router = Router();
-  }
-
-  get router() {
-    return this._router;
+    this.router = Router();
   }
 
   addRoute(route: Route): void {
     const wrapperAsyncHandler = asyncHandler(route.handler.bind(this));
-    this._router[route.method](route.path, wrapperAsyncHandler);
+    this.router[route.method](route.path, wrapperAsyncHandler);
     this.logger.info(`Route registered: ${route.method.toUpperCase()} ${route.path}`);
   }
 

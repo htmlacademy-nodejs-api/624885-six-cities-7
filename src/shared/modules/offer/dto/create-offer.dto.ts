@@ -8,7 +8,6 @@ export class CreateOfferDTO {
   public previewImage: string;
   public offerImages: string[];
   public isPremium: boolean;
-  public isFavorite: boolean;
   public rating: number;
   public category: CategoryType;
   public roomsNumber: number;

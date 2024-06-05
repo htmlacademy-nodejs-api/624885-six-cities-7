@@ -32,8 +32,7 @@ export class AppExceptionFilter implements ExceptionFilter {
   public catch(error: Error, req: Request, res: Response, next: NextFunction): void {
     if(error instanceof HttpError) {
       this.handleHttpError(error, req, res, next);
-    } else {
-      this.handleOtherErrors(error, req, res, next);
     }
+    this.handleOtherErrors(error, req, res, next);
   }
 }
