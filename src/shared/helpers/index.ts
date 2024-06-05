@@ -1,4 +1,5 @@
 export {
+  createErrorObject,
   fillDTO,
   generateRandomValue,
   getErrorMessage,

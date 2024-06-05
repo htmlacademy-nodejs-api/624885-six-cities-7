@@ -24,6 +24,7 @@ export abstract class BaseController implements Controller{
   addRoute(route: Route): void {
     const wrapperAsyncHandler = asyncHandler(route.handler.bind(this));
     this._router[route.method](route.path, wrapperAsyncHandler);
+    this.logger.info(`Route registered: ${route.method.toUpperCase()} ${route.path}`);
   }
 
   send<T>(res: Response, statusCode: number, data: T): void {
