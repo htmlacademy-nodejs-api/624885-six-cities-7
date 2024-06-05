@@ -248,22 +248,6 @@ paths:
         '404':
           description: Пользователь с таким id не найден
   /users/favorites:
-    get:
-      tags:
-        - users
-      description: Возвращает список избранных предложений пользователя
-      responses:
-        '200':
-          description: Список избранных предложений пользователя
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-                  example: 6329c3d6a04ab1061c6425ea
-        '401':
-          description: Пользователь не авторизован
     post:
       tags:
         - users
@@ -280,24 +264,6 @@ paths:
       responses:
         '200':
           description: Предложение добавлено в список избранного
-        '401':
-          description: Пользователь не авторизован
-    delete:
-      tags:
-        - users
-      description: Удаляет предложение из списка избранных пользователя
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                favoriteOfferId:
-                  type: string
-                  example: 6329c3d6a04ab1061c6425ea
-      responses:
-        '200':
-          description: Предложение удалено из списка избранного
         '401':
           description: Пользователь не авторизован
 

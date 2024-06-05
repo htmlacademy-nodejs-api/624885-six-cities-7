@@ -5,4 +5,5 @@ export type UserType = {
   email: string;
   avatar: string;
   userType: UserCategoryType;
+  favorites: string[]
 };
