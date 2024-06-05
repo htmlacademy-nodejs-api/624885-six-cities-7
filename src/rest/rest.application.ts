@@ -5,7 +5,7 @@ import { getMongoURI } from '../shared/helpers/database.js';
 import { Config, RestSchema } from '../shared/libs/config/index.js';
 import { DatabaseClient } from '../shared/libs/database-client/database-client.interface.js';
 import { Logger } from '../shared/libs/logger/index.js';
-import { Controller } from '../shared/libs/rest/index.js';
+import { Controller, ExceptionFilter } from '../shared/libs/rest/index.js';
 import { Component } from '../shared/types/component.enum.js';
 
 @injectable()
@@ -16,7 +16,8 @@ export class RestApplication {
     @inject(Component.Config) private readonly config: Config<RestSchema>,
     @inject(Component.DatabaseClient) private readonly databaseClient: DatabaseClient,
     @inject(Component.OfferController) private readonly offerController: Controller,
-    @inject(Component.UserController) private readonly userController: Controller
+    @inject(Component.UserController) private readonly userController: Controller,
+    @inject(Component.ExceptionFilter) private readonly appExceptionFilter: ExceptionFilter
   ) {
     this.server = express();
   }
@@ -37,16 +38,21 @@ export class RestApplication {
     this.server.use(express.json());
   }
 
+  private async initControllers() {
+    this.server.use('/offers', this.offerController.router);
+    this.server.use('/users', this.userController.router);
+  }
+
+  private async initExceptionFilters() {
+    this.server.use(this.appExceptionFilter.catch.bind(this.appExceptionFilter));
+  }
+
   private async initServer() {
     const port = this.config.get('PORT');
 
     this.server.listen(port);
   }
 
-  private async initControllers() {
-    this.server.use('/offers', this.offerController.router);
-    this.server.use('/users', this.userController.router);
-  }
 
   public async init() {
     this.logger.info('Application initialization.');
@@ -62,6 +68,10 @@ export class RestApplication {
     this.logger.info('Init controllers...');
     await this.initControllers();
     this.logger.info('Init controllers completed.');
+
+    this.logger.info('Init exceptionFilters...');
+    await this.initExceptionFilters();
+    this.logger.info('Init exceptionFilters completed.');
 
     this.logger.info('Starting server...');
     await this.initServer();
