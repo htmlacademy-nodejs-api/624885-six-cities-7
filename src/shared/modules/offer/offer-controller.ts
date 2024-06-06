@@ -25,8 +25,9 @@ export class OfferController extends BaseController {
     this.addRoute({path: '/:id', method: HttpMethod.Delete, handler: this.delete});
   }
 
-  public async index(_req: Request, res: Response): Promise<void> {
-    const offers = await this.offerService.find();
+  public async index(req: Request, res: Response): Promise<void> {
+    const count = req.query.count ?? '60';
+    const offers = await this.offerService.find(+count);
     this.ok(res, fillDTO(OffersRdo, offers));
   }
 

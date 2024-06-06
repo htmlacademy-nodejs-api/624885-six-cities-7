@@ -17,7 +17,7 @@ export class DefaultOfferService implements OfferService {
     @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>
   ) {}
 
-  public async find(offersCount = 60): Promise<DocumentType<OfferEntity>[]> {
+  public async find(offersCount: number): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
       .find()
       .sort({createdAt: SortType.Down})
