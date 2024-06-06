@@ -36,6 +36,7 @@ export class RestApplication {
 
   private async initMiddleware() {
     this.server.use(express.json());
+    this.server.use(express.urlencoded({extended: false}));
   }
 
   private async initControllers() {
@@ -75,6 +76,6 @@ export class RestApplication {
 
     this.logger.info('Starting server...');
     await this.initServer();
-    this.logger.info(`Server started on http://localhost:${this.config.get('PORT')}`);
+    this.logger.info(`Server started on http://${this.config.get('HOST')}:${this.config.get('PORT')}`);
   }
 }
