@@ -14,7 +14,7 @@ export class CreateOfferDTO {
   public maxGuestsNumber: number;
   public price: number;
   public goods: GoodsType[];
-  public user: string;
+  public userId: string;
   public numberOfComments: number;
   public location: LocationType;
 }

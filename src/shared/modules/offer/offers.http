@@ -38,23 +38,23 @@ Content-Type: application/json
 ###
 
 ## Получить детали предложения
-GET http://localhost:5000/offers/6651aa6a9c10d7c6bddf1fb7 HTTP/1.1
+GET http://localhost:5000/offers/66685e160d4d042a29e39172 HTTP/1.1
 Content-Type: application/json
 
 ###
 
 ## Обновить предложение
-PATCH   http://localhost:5000/offers/6651aa6a9c10d7c6bddf1e8a HTTP/1.1
+PATCH   http://localhost:5000/offers/66685e160d4d042a29e39172 HTTP/1.1
 Content-Type: application/json
 
 {
-  "price": 12345
+  "userId": "6651aa6a9c10d7c6bddf1ece"
 }
 
 ###
 
 ## Удалить предложение
-DELETE http://localhost:5000/offers/6651aa6a9c10d7c6bddf1e8a HTTP/1.1
+DELETE http://localhost:5000/offers/66685b677753e72b0a94911c HTTP/1.1
 Content-Type: application/json
 
 ###
