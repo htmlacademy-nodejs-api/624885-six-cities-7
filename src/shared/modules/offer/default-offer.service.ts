@@ -4,11 +4,13 @@ import { inject, injectable } from 'inversify';
 import { SortType } from '../../consts.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/component.enum.js';
-import { NUMBER_OF_PREMIUM_OFFERS } from './consts.js';
-import { CreateOfferDTO } from './dto/create-offer.dto.js';
-import { UpdateOfferDto } from './dto/update-offer.dto.js';
-import { OfferEntity } from './offer.entity.js';
-import { OfferService } from './offer-service.interface.js';
+import {
+  CreateOfferDTO,
+  NUMBER_OF_PREMIUM_OFFERS,
+  OfferEntity,
+  OfferService,
+  UpdateOfferDto
+} from './index.js';
 
 @injectable()
 export class DefaultOfferService implements OfferService {

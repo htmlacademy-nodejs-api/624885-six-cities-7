@@ -6,8 +6,7 @@ import { fillDTO } from '../../helpers/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { BaseController, HttpError } from '../../libs/rest/index.js';
 import { Component, HttpMethod } from '../../types/index.js';
-import { OfferService, OffersRdo } from './index.js';
-import { DetailOffersRdo } from './rdo/detail-offers.rdo.js';
+import { DEFAULT_OFFER_COUNT, DetailOffersRdo, OfferService, OffersRdo, ParamOfferId } from './index.js';
 
 @injectable()
 export class OfferController extends BaseController {
@@ -26,7 +25,7 @@ export class OfferController extends BaseController {
   }
 
   public async index(req: Request, res: Response): Promise<void> {
-    const count = req.query.count ?? '60';
+    const count = req.query.count ?? DEFAULT_OFFER_COUNT;
     const offers = await this.offerService.find(+count);
     this.ok(res, fillDTO(OffersRdo, offers));
   }
@@ -38,15 +37,15 @@ export class OfferController extends BaseController {
     this.created(res, fillDTO(OffersRdo, result));
   }
 
-  public async details(req: Request, res: Response): Promise<void> {
-    const result = await this.offerService.findById(req.params.id);
+  public async details({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
+    const result = await this.offerService.findById(params.id);
     if(!result) {
       throw new HttpError(StatusCodes.NOT_FOUND, 'Offer not found');
     }
     this.ok(res, fillDTO(DetailOffersRdo, result));
   }
 
-  public async update(req: Request, res: Response): Promise<void> {
+  public async update(req: Request<ParamOfferId>, res: Response): Promise<void> {
     const offer = await this.offerService.findById(req.params.id);
     if(!offer) {
       throw new HttpError(StatusCodes.NOT_FOUND, 'Offer not found');
@@ -56,8 +55,8 @@ export class OfferController extends BaseController {
     this.ok(res, fillDTO(DetailOffersRdo, result));
   }
 
-  public async delete(req: Request, res: Response): Promise<void> {
-    const offer = await this.offerService.findById(req.params.id);
+  public async delete({ params }: Request, res: Response): Promise<void> {
+    const offer = await this.offerService.findById(params.id);
     if(!offer) {
       throw new HttpError(StatusCodes.NOT_FOUND, 'Offer not found');
     }
