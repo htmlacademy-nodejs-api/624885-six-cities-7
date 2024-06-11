@@ -20,7 +20,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({required: true, minlength: 20, maxlength: 1024})
   public description: string;
 
-  @prop({ required: true })
+  @prop()
   public postDate: Date;
 
   @prop({required: true})
@@ -35,10 +35,10 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({required: true})
   public isPremium: boolean;
 
-  @prop({required: true})
+  @prop()
   public isFavorite: boolean;
 
-  @prop({required: true})
+  @prop()
   public rating: number;
 
   @prop({
@@ -68,9 +68,9 @@ export class OfferEntity extends defaultClasses.TimeStamps {
     required: true,
     ref: () => UserEntity,
   })
-  public user!: Ref<UserEntity>;
+  public userId!: Ref<UserEntity>;
 
-  @prop({required: true})
+  @prop()
   public numberOfComments: number;
 
   @prop({required: true})

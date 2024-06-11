@@ -2,6 +2,7 @@ export { CategoryType } from './category.type.js';
 export { CityType } from './city.type.js';
 export { Component } from './component.enum.js';
 export { GoodsType } from './goods.type.js';
+export { HttpMethod } from './http-method.enum.js';
 export { LocationType } from './location.type.js';
 export { MockServerDataType } from './mock-server-data.type.js';
 export { OfferType } from './offer.type.js';

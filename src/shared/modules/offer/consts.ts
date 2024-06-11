@@ -1,0 +1,1 @@
+export const NUMBER_OF_PREMIUM_OFFERS = 3;

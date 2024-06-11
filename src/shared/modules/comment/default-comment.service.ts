@@ -1,11 +1,10 @@
 import { DocumentType, types } from '@typegoose/typegoose';
 import { inject, injectable } from 'inversify';
 
-import { Logger } from '../../libs/logger/logger.interface.js';
-import { Component } from '../../types/component.enum.js';
+import { Logger } from '../../libs/logger/index.js';
+import { Component } from '../../types/index.js';
 import { OfferService } from '../offer/index.js';
-import { CreateCommentDto } from './dto/create-comment.dto.js';
-import { CommentEntity, CommentService } from './index.js';
+import { CommentEntity, CommentService, CreateCommentDto } from './index.js';
 
 @injectable()
 export class DefaultCommentService implements CommentService {
@@ -24,7 +23,7 @@ export class DefaultCommentService implements CommentService {
   }
 
   public async findByOfferId(offerId: string): Promise<DocumentType<CommentEntity>[]> {
-    return await this.commentModel.find({offerId}).populate('userId').exec();
+    return this.commentModel.find({offerId}).populate('userId').exec();
   }
 
   public async deleteByOfferId(offerId: string): Promise<number | null> {
