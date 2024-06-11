@@ -1,6 +1,6 @@
 # Предложения
 ## Получить список предложений
-GET http://localhost:5000/offers?count=1 HTTP/1.1
+GET http://localhost:5000/offers HTTP/1.1
 Content-Type: application/json
 
 ###
@@ -38,7 +38,7 @@ Content-Type: application/json
 ###
 
 ## Получить детали предложения
-GET http://localhost:5000/offers/6651aa6a9c10d7c6bddf1e8a HTTP/1.1
+GET http://localhost:5000/offers/6651aa6a9c10d7c6bddf1fb7 HTTP/1.1
 Content-Type: application/json
 
 ###

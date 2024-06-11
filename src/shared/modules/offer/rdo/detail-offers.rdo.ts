@@ -8,6 +8,9 @@ import { LocationType } from '../../../types/location.type.js';
 
 export class DetailOffersRdo {
   @Expose()
+  public id: string;
+
+  @Expose()
   public name: string;
 
   @Expose()
