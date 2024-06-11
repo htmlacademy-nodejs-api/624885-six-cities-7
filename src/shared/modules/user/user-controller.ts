@@ -3,8 +3,6 @@ import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
 
 import { fillDTO } from '../../helpers/common.js';
-import { Config } from '../../libs/config/config.interface.js';
-import { RestSchema } from '../../libs/config/rest.schema.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { BaseController, HttpError } from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
@@ -16,8 +14,7 @@ import { UserService } from './user-service.interface.js';
 export class UserController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
-    @inject(Component.UserService) private readonly userService: UserService,
-    @inject(Component.Config) private readonly config: Config<RestSchema>
+    @inject(Component.UserService) private readonly userService: UserService
   ){
     super(logger);
 
@@ -36,8 +33,7 @@ export class UserController extends BaseController {
         'UserController'
       );
     }
-    const salt = this.config.get('SALT');
-    const result = await this.userService.create(newUser, salt);
+    const result = await this.userService.create(newUser);
     this.created(res, fillDTO(UserRdo, result));
   }
 

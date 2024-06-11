@@ -2,9 +2,7 @@ import chalk from 'chalk';
 
 import { DEFAULT_USER_PASSWORD } from '../../shared/consts.js';
 import { getErrorMessage, getMongoURI } from '../../shared/helpers/index.js';
-import { Config } from '../../shared/libs/config/config.interface.js';
-import { RestConfig } from '../../shared/libs/config/rest.config.js';
-import { RestSchema } from '../../shared/libs/config/rest.schema.js';
+import { Config, RestConfig, RestSchema } from '../../shared/libs/config/index.js';
 import { DatabaseClient, MongoDatabaseClient } from '../../shared/libs/database-client/index.js';
 import { TSVFileReader } from '../../shared/libs/file-reader/tsv-file-reader.js';
 import { Logger, PinoLogger } from '../../shared/libs/logger/index.js';
@@ -28,8 +26,8 @@ export class ImportCommand implements Command {
     this.logger = new PinoLogger();
     this.databaseClient = new MongoDatabaseClient(this.logger);
     this.offerService = new DefaultOfferService(this.logger, OfferModel);
-    this.userService = new DefaultUserService(this.logger, UserModel);
     this.config = new RestConfig(this.logger);
+    this.userService = new DefaultUserService(this.logger, UserModel, this.config);
   }
 
   private async onImportedOffer(offer: OfferType, resolve: () => void) {
