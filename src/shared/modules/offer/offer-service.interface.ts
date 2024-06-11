@@ -12,6 +12,7 @@ export interface OfferService {
   findById(offerId: string): Promise<DocumentType<OfferEntity> | null>;
   updateById(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null>;
   deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null>;
+  exists(offerId: string): Promise<boolean>;
   incCommentCount(offerId: string): Promise<DocumentType<OfferEntity> | null>;
   updateRating(offerId: string, rate: number): Promise<DocumentType<OfferEntity> | null>;
 }

@@ -6,12 +6,14 @@ import { fillDTO } from '../../helpers/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { BaseController, HttpError } from '../../libs/rest/index.js';
 import { Component, HttpMethod } from '../../types/index.js';
+import { CommentService } from '../comment/comment-service.interface.js';
 import { CreateOfferDTO, DEFAULT_OFFER_COUNT, DetailOffersRdo, OfferService, OffersRdo, ParamOfferId, UpdateOfferDto } from './index.js';
 
 @injectable()
 export class OfferController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
+    @inject(Component.CommentService) private readonly commentService: CommentService,
     @inject(Component.OfferService) private readonly offerService: OfferService
   ){
     super(logger);
@@ -58,7 +60,7 @@ export class OfferController extends BaseController {
     if(!result) {
       throw new HttpError(StatusCodes.NOT_FOUND, 'Offer not found', 'OfferController');
     }
-
+    await this.commentService.deleteByOfferId(params.id);
     this.noContent(res, result);
   }
 }

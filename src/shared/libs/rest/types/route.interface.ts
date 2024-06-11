@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { HttpMethod } from '../../types/index.js';
+import { HttpMethod } from '../../../types/index.js';
 
 
 export interface Route {
