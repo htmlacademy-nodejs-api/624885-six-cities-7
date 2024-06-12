@@ -4,10 +4,18 @@ import { inject, injectable } from 'inversify';
 
 import { fillDTO } from '../../helpers/index.js';
 import { Logger } from '../../libs/logger/index.js';
-import { BaseController, HttpError } from '../../libs/rest/index.js';
+import { BaseController, HttpError, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component, HttpMethod } from '../../types/index.js';
 import { CommentService } from '../comment/comment-service.interface.js';
-import { CreateOfferDTO, DEFAULT_OFFER_COUNT, DetailOffersRdo, OfferService, OffersRdo, ParamOfferId, UpdateOfferDto } from './index.js';
+import {
+  CreateOfferDTO,
+  DEFAULT_OFFER_COUNT,
+  DetailOffersRdo,
+  OfferService,
+  OffersRdo,
+  ParamOfferId,
+  UpdateOfferDto
+} from './index.js';
 
 @injectable()
 export class OfferController extends BaseController {
@@ -21,9 +29,24 @@ export class OfferController extends BaseController {
     this.logger.info('Register routes for OfferController');
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
-    this.addRoute({path: '/:id', method: HttpMethod.Get, handler: this.details});
-    this.addRoute({path: '/:id', method: HttpMethod.Patch, handler: this.update});
-    this.addRoute({path: '/:id', method: HttpMethod.Delete, handler: this.delete});
+    this.addRoute({
+      path: '/:id',
+      method: HttpMethod.Get,
+      handler: this.details,
+      middlewares: [new ValidateObjectIdMiddleware('id')]
+    });
+    this.addRoute({
+      path: '/:id',
+      method: HttpMethod.Patch,
+      handler: this.update,
+      middlewares: [new ValidateObjectIdMiddleware('id')]
+    });
+    this.addRoute({
+      path: '/:id',
+      method: HttpMethod.Delete,
+      handler: this.delete,
+      middlewares: [new ValidateObjectIdMiddleware('id')]
+    });
   }
 
   public async index(req: Request, res: Response): Promise<void> {

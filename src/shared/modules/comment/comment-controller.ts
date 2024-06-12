@@ -4,7 +4,7 @@ import { inject, injectable } from 'inversify';
 
 import { fillDTO } from '../../helpers/common.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
-import { BaseController, HttpError } from '../../libs/rest/index.js';
+import { BaseController, HttpError, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
 import { HttpMethod } from '../../types/http-method.enum.js';
 import { ParamOfferId } from '../offer/index.js';
@@ -23,7 +23,12 @@ export class CommentController extends BaseController {
     super(logger);
 
     this.logger.info('Register routes for CommentController');
-    this.addRoute({ path: '/:id', method: HttpMethod.Get, handler: this.index});
+    this.addRoute({
+      path: '/:id',
+      method: HttpMethod.Get,
+      handler: this.index,
+      middlewares: [new ValidateObjectIdMiddleware('id')]
+    });
     this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.create});
   }
 
