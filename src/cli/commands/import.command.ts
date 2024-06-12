@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-import { DEFAULT_USER_PASSWORD } from '../../shared/consts.js';
+import { DEFAULT_USER_PASSWORD } from '../../shared/consts/consts.js';
 import { getErrorMessage, getMongoURI } from '../../shared/helpers/index.js';
 import { Config, RestConfig, RestSchema } from '../../shared/libs/config/index.js';
 import { DatabaseClient, MongoDatabaseClient } from '../../shared/libs/database-client/index.js';

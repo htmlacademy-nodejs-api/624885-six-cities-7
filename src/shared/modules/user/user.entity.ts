@@ -1,6 +1,6 @@
 import { defaultClasses ,getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
 
-import { DEFAULT_USER_AVATAR } from '../../consts.js';
+import { DEFAULT_USER_AVATAR } from '../../consts/consts.js';
 import { createSHA256 } from '../../helpers/index.js';
 import { UserCategoryType, UserType } from '../../types/index.js';
 

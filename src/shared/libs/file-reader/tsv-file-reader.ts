@@ -1,7 +1,7 @@
 import EventEmitter from 'node:events';
 import { createReadStream,ReadStream } from 'node:fs';
 
-import { CITIES } from '../../consts.js';
+import { CITIES } from '../../consts/consts.js';
 import { CategoryType, CityType, GoodsType, LocationType, OfferType, UserCategoryType,UserType} from '../../types/index.js';
 import { stringToBoolean } from '../utils.js';
 import { FileReader } from './file-reader.interface.js';

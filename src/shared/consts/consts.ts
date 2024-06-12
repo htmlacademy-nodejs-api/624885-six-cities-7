@@ -1,4 +1,4 @@
-import { CityType } from './types/city.type.js';
+import { CityType } from '../types/index.js';
 
 const CitiesListItems = {
   PARIS: 'Paris',
