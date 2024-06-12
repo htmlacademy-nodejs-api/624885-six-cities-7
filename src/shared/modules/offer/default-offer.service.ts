@@ -2,7 +2,7 @@ import { DocumentType, types } from '@typegoose/typegoose';
 import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
 
-import { SortType } from '../../consts.js';
+import { SortType } from '../../consts/consts.js';
 import { Logger } from '../../libs/logger/index.js';
 import { HttpError } from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
