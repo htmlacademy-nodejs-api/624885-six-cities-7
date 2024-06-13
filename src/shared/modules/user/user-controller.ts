@@ -4,9 +4,10 @@ import { inject, injectable } from 'inversify';
 
 import { fillDTO } from '../../helpers/common.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
-import { BaseController, HttpError } from '../../libs/rest/index.js';
+import { BaseController, HttpError, ValidateDtoMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
 import { HttpMethod } from '../../types/http-method.enum.js';
+import { CreateUserDTO } from './dto/create-user.dto.js';
 import { UserRdo } from './rdo/user.rdo.js';
 import { UserService } from './user-service.interface.js';
 
@@ -19,7 +20,12 @@ export class UserController extends BaseController {
     super(logger);
 
     this.logger.info('Register routes for UserController');
-    this.addRoute({path: '/register', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({
+      path: '/register',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateUserDTO)]
+    });
     this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login});
   }
 

@@ -4,12 +4,11 @@ POST http://localhost:5000/users/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "ivnikon",
-  "email": "ivnikon@mail.ru",
+  "name": "test2",
+  "email": "test2@mail.ru",
   "avatar": "default-avatar.png",
-  "password": "12345",
-  "userType": "Pro",
-  "favorites": []
+  "password": "123456",
+  "userType": "Pro"
 }
 
 ###
