@@ -22,3 +22,16 @@ Content-Type: application/json
 }
 
 ###
+## Отправить изображение
+
+POST http://localhost:5000/users/666b4668456811eab6efd82a/avatar HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="avatar"; filename="screen.png"
+Content-Type: image/png
+
+< /home/ivnikon/screen.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+##
