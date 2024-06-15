@@ -6,6 +6,7 @@ export { ExceptionFilter } from './exception-filter/exception-filter.interface.j
 export { Middleware } from './middleware/middleware.interface.js';
 export { ValidateDtoMiddleware } from './middleware/validate-dto.middleware.js';
 export { ValidateObjectIdMiddleware } from './middleware/validate-objectid.middleware.js';
+export { DocumentExists } from './types/document-exists.interface.js';
 export { RequestBody } from './types/request-body.type.js';
 export { RequestParams } from './types/request-params.type.js';
 export { Route } from './types/route.interface.js';

@@ -30,10 +30,14 @@ export class CommentController extends BaseController {
       handler: this.index,
       middlewares: [
         new ValidateObjectIdMiddleware('id'),
-        new ValidateDtoMiddleware(CreateCommentDto)
       ]
     });
-    this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateCommentDto)]
+    });
   }
 
   public async create({ body }: CreateCommentRequest, res: Response): Promise<void> {
