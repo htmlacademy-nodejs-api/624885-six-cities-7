@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
 
 import { fillDTO } from '../../helpers/index.js';
 import { Logger } from '../../libs/logger/index.js';
-import { BaseController, HttpError, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { DocumenExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
 import { Component, HttpMethod } from '../../types/index.js';
 import { CommentService } from '../comment/comment-service.interface.js';
 import {
@@ -38,7 +38,10 @@ export class OfferController extends BaseController {
       path: '/:id',
       method: HttpMethod.Get,
       handler: this.details,
-      middlewares: [new ValidateObjectIdMiddleware('id')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('id'),
+        new DocumenExistsMiddleware(this.offerService, 'Offer', 'id')
+      ]
     });
     this.addRoute({
       path: '/:id',
@@ -46,6 +49,7 @@ export class OfferController extends BaseController {
       handler: this.update,
       middlewares: [
         new ValidateObjectIdMiddleware('id'),
+        new DocumenExistsMiddleware(this.offerService, 'Offer', 'id'),
         new ValidateDtoMiddleware(UpdateOfferDto)
       ]
     });
@@ -53,7 +57,10 @@ export class OfferController extends BaseController {
       path: '/:id',
       method: HttpMethod.Delete,
       handler: this.delete,
-      middlewares: [new ValidateObjectIdMiddleware('id')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('id'),
+        new DocumenExistsMiddleware(this.offerService, 'Offer', 'id')
+      ]
     });
   }
 
@@ -71,26 +78,19 @@ export class OfferController extends BaseController {
 
   public async details({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
     const result = await this.offerService.findById(params.id);
-    if(!result) {
-      throw new HttpError(StatusCodes.NOT_FOUND, 'Offer not found', 'OfferController');
-    }
+
     this.ok(res, fillDTO(DetailOffersRdo, result));
   }
 
   public async update({ body, params}: Request<ParamOfferId, unknown, UpdateOfferDto>, res: Response): Promise<void> {
     const result = await this.offerService.updateById(params.id, body);
 
-    if(!result) {
-      throw new HttpError(StatusCodes.NOT_FOUND, 'Offer not found');
-    }
     this.ok(res, fillDTO(DetailOffersRdo, result));
   }
 
   public async delete({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
     const result = await this.offerService.deleteById(params.id);
-    if(!result) {
-      throw new HttpError(StatusCodes.NOT_FOUND, 'Offer not found', 'OfferController');
-    }
+
     await this.commentService.deleteByOfferId(params.id);
     this.noContent(res, result);
   }
