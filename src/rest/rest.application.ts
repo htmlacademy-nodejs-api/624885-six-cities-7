@@ -6,6 +6,7 @@ import { Config, RestSchema } from '../shared/libs/config/index.js';
 import { DatabaseClient } from '../shared/libs/database-client/database-client.interface.js';
 import { Logger } from '../shared/libs/logger/index.js';
 import { Controller, ExceptionFilter } from '../shared/libs/rest/index.js';
+import { AuthExceptionFilter } from '../shared/modules/auth/auth-exception-filter.js';
 import { Component } from '../shared/types/component.enum.js';
 import { UPLOAD_PATH } from './consts.js';
 
@@ -19,7 +20,8 @@ export class RestApplication {
     @inject(Component.CommentController) private readonly commentController: Controller,
     @inject(Component.OfferController) private readonly offerController: Controller,
     @inject(Component.UserController) private readonly userController: Controller,
-    @inject(Component.ExceptionFilter) private readonly appExceptionFilter: ExceptionFilter
+    @inject(Component.ExceptionFilter) private readonly appExceptionFilter: ExceptionFilter,
+    @inject(Component.AuthExceptionFilter) private readonly authExceptionFilter: AuthExceptionFilter
   ) {
     this.server = express();
   }
@@ -52,6 +54,7 @@ export class RestApplication {
   }
 
   private async initExceptionFilters() {
+    this.server.use(this.authExceptionFilter.catch.bind(this.authExceptionFilter));
     this.server.use(this.appExceptionFilter.catch.bind(this.appExceptionFilter));
   }
 
