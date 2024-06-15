@@ -7,6 +7,7 @@ import { DatabaseClient } from '../shared/libs/database-client/database-client.i
 import { Logger } from '../shared/libs/logger/index.js';
 import { Controller, ExceptionFilter } from '../shared/libs/rest/index.js';
 import { Component } from '../shared/types/component.enum.js';
+import { UPLOAD_PATH } from './consts.js';
 
 @injectable()
 export class RestApplication {
@@ -37,6 +38,10 @@ export class RestApplication {
 
   private async initMiddleware() {
     this.server.use(express.json());
+    this.server.use(
+      UPLOAD_PATH,
+      express.static(this.config.get('UPLOAD_DIRECTORY'))
+    );
     this.server.use(express.urlencoded({extended: false}));
   }
 

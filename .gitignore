@@ -13,4 +13,4 @@ coverage
 /logs/
 .env
 docker-compose.yml
-
+/upload/
