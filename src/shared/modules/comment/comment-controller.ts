@@ -5,6 +5,7 @@ import { inject, injectable } from 'inversify';
 import { fillDTO } from '../../helpers/common.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { BaseController, HttpError, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { DocumenExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
 import { Component } from '../../types/component.enum.js';
 import { HttpMethod } from '../../types/http-method.enum.js';
 import { ParamOfferId } from '../offer/index.js';
@@ -30,6 +31,7 @@ export class CommentController extends BaseController {
       handler: this.index,
       middlewares: [
         new ValidateObjectIdMiddleware('id'),
+        new DocumenExistsMiddleware(this.offerService, 'Offer', 'id')
       ]
     });
     this.addRoute({
