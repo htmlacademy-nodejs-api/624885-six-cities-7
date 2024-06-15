@@ -1,6 +1,6 @@
 # Предложения
 ## Получить список предложений
-GET http://localhost:5000/offers?count=1 HTTP/1.1
+GET http://localhost:5000/offers HTTP/1.1
 Content-Type: application/json
 
 ###
@@ -10,7 +10,7 @@ POST  http://localhost:5000/offers HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "Super offer",
+  "name": "TEST invalid offer",
   "description": "Example description 123456789",
   "city": "Amsterdam",
   "previewImage": "preview.jpg",
@@ -38,23 +38,25 @@ Content-Type: application/json
 ###
 
 ## Получить детали предложения
-GET http://localhost:5000/offers/6651aa6a9c10d7c6bddf1e8a HTTP/1.1
+GET http://localhost:5000/offers/666856f6438c02df988dd08 HTTP/1.1
 Content-Type: application/json
 
 ###
 
 ## Обновить предложение
-PATCH   http://localhost:5000/offers/6651aa6a9c10d7c6bddf1e8a HTTP/1.1
+PATCH   http://localhost:5000/offers/666b3878da6b70c570022a85 HTTP/1.1
 Content-Type: application/json
 
 {
-  "price": 12345
+  "rating": 4,
+  "price": 1345,
+  "numberOfComments": 1
 }
 
 ###
 
 ## Удалить предложение
-DELETE http://localhost:5000/offers/6651aa6a9c10d7c6bddf1e8a HTTP/1.1
+DELETE http://localhost:5000/offers/66685e160d4d042a29e39172 HTTP/1.1
 Content-Type: application/json
 
 ###

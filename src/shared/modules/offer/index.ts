@@ -1,7 +1,12 @@
+export * from './consts.js';
 export { DefaultOfferService } from './default-offer.service.js';
 export { CreateOfferDTO } from './dto/create-offer.dto.js';
+export { OfferValidationMessage } from './dto/offer.messages.js';
+export { UpdateOfferDto } from './dto/update-offer.dto.js';
 export { createOfferContainer } from './offer.container.js';
 export { OfferEntity, OfferModel } from './offer.entity.js';
 export { OfferController } from './offer-controller.js';
 export { OfferService } from './offer-service.interface.js';
+export { DetailOffersRdo } from './rdo/detail-offers.rdo.js';
 export { OffersRdo } from './rdo/offers.rdo.js';
+export { ParamOfferId } from './type/param-offerid.type.js';

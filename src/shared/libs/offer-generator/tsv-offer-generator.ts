@@ -1,8 +1,6 @@
 import dayjs from 'dayjs';
 
-import { CITIES } from '../../consts.js';
-import { generateRandomValue, getRandomItem, getRandomItems } from '../../helpers/common.js';
-import { CategoryType, CityType, GoodsType, MockServerDataType } from '../../types/index.js';
+import { CITIES } from '../../consts/consts.js';
 import {
   ADULTS_COUNT,
   COMMENTS_COUNT,
@@ -11,7 +9,9 @@ import {
   NUMBER_OF_PHOTOS, PRICE, RATING,
   RATING_DECIMAL_NUMBERS_COUNT,
   ROOMS_COUNT,
-  WEEK_DAY} from './consts.js';
+  WEEK_DAY} from '../../consts/offer-consts.js';
+import { generateRandomValue, getRandomItem, getRandomItems } from '../../helpers/common.js';
+import { CategoryType, CityType, GoodsType, MockServerDataType } from '../../types/index.js';
 import { OfferGenerator } from './offer-generator.interface.js';
 
 export class TSVOfferGenerator implements OfferGenerator {

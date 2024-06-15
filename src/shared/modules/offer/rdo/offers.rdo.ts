@@ -4,6 +4,9 @@ import { CategoryType } from '../../../types/category.type.js';
 
 export class OffersRdo {
   @Expose()
+  public id: string;
+
+  @Expose()
   public name: string;
 
   @Expose({ name: 'createdAt'})

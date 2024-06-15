@@ -1,8 +1,15 @@
 import { types } from '@typegoose/typegoose';
 import { Container } from 'inversify';
 
+import { Controller } from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
-import { CommentEntity, CommentModel, CommentService, DefaultCommentService } from './index.js';
+import {
+  CommentController,
+  CommentEntity,
+  CommentModel,
+  CommentService,
+  DefaultCommentService
+} from './index.js';
 
 export function createCommentContainer() {
   const commentContainer = new Container();
@@ -12,6 +19,9 @@ export function createCommentContainer() {
     .inSingletonScope();
   commentContainer.bind<types.ModelType<CommentEntity>>(Component.CommentModel)
     .toConstantValue(CommentModel);
+  commentContainer.bind<Controller>(Component.CommentController)
+    .to(CommentController)
+    .inSingletonScope();
 
   return commentContainer;
 }

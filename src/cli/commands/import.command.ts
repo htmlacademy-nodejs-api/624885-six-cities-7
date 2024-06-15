@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-import { DEFAULT_USER_PASSWORD } from '../../shared/consts.js';
+import { DEFAULT_USER_PASSWORD } from '../../shared/consts/consts.js';
 import { getErrorMessage, getMongoURI } from '../../shared/helpers/index.js';
 import { Config, RestConfig, RestSchema } from '../../shared/libs/config/index.js';
 import { DatabaseClient, MongoDatabaseClient } from '../../shared/libs/database-client/index.js';
@@ -25,7 +25,7 @@ export class ImportCommand implements Command {
 
     this.logger = new PinoLogger();
     this.databaseClient = new MongoDatabaseClient(this.logger);
-    this.offerService = new DefaultOfferService(this.logger, OfferModel);
+    this.offerService = new DefaultOfferService(this.logger, OfferModel, UserModel);
     this.config = new RestConfig(this.logger);
     this.userService = new DefaultUserService(this.logger, UserModel, this.config);
   }
@@ -55,7 +55,7 @@ export class ImportCommand implements Command {
       maxGuestsNumber: offer.maxGuestsNumber,
       price: offer.price,
       goods: offer.goods,
-      user: user?.id,
+      userId: user?.id,
       numberOfComments: offer.numberOfComments,
       location: offer.location
     });
