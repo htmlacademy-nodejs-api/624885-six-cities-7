@@ -175,7 +175,31 @@ paths:
           description: Пользователь не авторизован
         '404':
           description: Предложение не найдено
-
+  /offers/favorites:
+    get:
+      tags:
+        - "offers"
+      description: Получение избранных предложений пользователя
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Пользователь не авторизован
+  /offers/{offerId}/favorite:
+    post:
+      tags:
+        - "offers"
+      parameters:
+        - in: path
+          name: offerId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Пользователь не авторизован
   /users/login:
     get:
       tags:
@@ -247,25 +271,6 @@ paths:
           description: Пользователь не авторизован
         '404':
           description: Пользователь с таким id не найден
-  /users/favorites:
-    post:
-      tags:
-        - users
-      description: Добавляет предложение в список избранных пользователя
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                favoriteOfferId:
-                  type: string
-                  example: 6329c3d6a04ab1061c6425ea
-      responses:
-        '200':
-          description: Предложение добавлено в список избранного
-        '401':
-          description: Пользователь не авторизован
 
 components:
   schemas:
