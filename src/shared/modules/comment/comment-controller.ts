@@ -4,12 +4,17 @@ import { inject, injectable } from 'inversify';
 
 import { fillDTO } from '../../helpers/common.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
-import { BaseController, HttpError, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import {
+  BaseController,
+  HttpError,
+  PrivateRouteMiddleware,
+  ValidateDtoMiddleware,
+  ValidateObjectIdMiddleware
+} from '../../libs/rest/index.js';
 import { DocumenExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
 import { Component } from '../../types/component.enum.js';
 import { HttpMethod } from '../../types/http-method.enum.js';
-import { ParamOfferId } from '../offer/index.js';
-import { OfferService } from '../offer/offer-service.interface.js';
+import { OfferService, ParamOfferId } from '../offer/index.js';
 import { CommentService } from './comment-service.interface.js';
 import { CreateCommentDto } from './dto/create-comment.dto.js';
 import { CommentRdo } from './rdo/create-comment.rdo.js';
@@ -38,7 +43,10 @@ export class CommentController extends BaseController {
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateDtoMiddleware(CreateCommentDto)]
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateDtoMiddleware(CreateCommentDto)
+      ]
     });
   }
 
