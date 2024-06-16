@@ -3,7 +3,7 @@ import { inject, injectable } from 'inversify';
 
 import { fillDTO } from '../../helpers/index.js';
 import { Logger } from '../../libs/logger/index.js';
-import { BaseController, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, PrivateRouteMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { DocumenExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
 import { Component, HttpMethod } from '../../types/index.js';
 import { CommentService } from '../comment/comment-service.interface.js';
@@ -32,7 +32,10 @@ export class OfferController extends BaseController {
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateDtoMiddleware(CreateOfferDTO)]
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateDtoMiddleware(CreateOfferDTO)
+      ]
     });
     this.addRoute({
       path: '/:id',
@@ -48,6 +51,7 @@ export class OfferController extends BaseController {
       method: HttpMethod.Patch,
       handler: this.update,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('id'),
         new DocumenExistsMiddleware(this.offerService, 'Offer', 'id'),
         new ValidateDtoMiddleware(UpdateOfferDto)
@@ -58,6 +62,7 @@ export class OfferController extends BaseController {
       method: HttpMethod.Delete,
       handler: this.delete,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('id'),
         new DocumenExistsMiddleware(this.offerService, 'Offer', 'id')
       ]
