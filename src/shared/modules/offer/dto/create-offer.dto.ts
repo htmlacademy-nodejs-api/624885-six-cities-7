@@ -5,7 +5,6 @@ import {
   IsDefined,
   IsEnum,
   IsInt,
-  IsMongoId,
   IsNumber,
   IsPositive,
   IsString,
