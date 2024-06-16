@@ -29,4 +29,6 @@ export class UpdateUserDTO {
 
   @IsEnum(UserCategoryType, { message: CreateUserMessages.userType.invalidFormat })
   public userType?: UserCategoryType;
+
+  public favorites?: string[];
 }

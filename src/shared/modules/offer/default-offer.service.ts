@@ -7,6 +7,7 @@ import { Logger } from '../../libs/logger/index.js';
 import { HttpError } from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
 import { UserEntity } from '../user/user.entity.js';
+import { UserService } from '../user/user-service.interface.js';
 import {
   CreateOfferDTO,
   NUMBER_OF_PREMIUM_OFFERS,
@@ -20,16 +21,45 @@ export class DefaultOfferService implements OfferService {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
     @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>,
-    @inject(Component.UserModel) private readonly userModel: types.ModelType<UserEntity>
+    @inject(Component.UserModel) private readonly userModel: types.ModelType<UserEntity>,
+    @inject(Component.UserService) private readonly userService: UserService
   ) {}
 
-  public async find(offersCount: number): Promise<DocumentType<OfferEntity>[]> {
-    return this.offerModel
-      .find()
+  public async find(email: string, count: number,): Promise<DocumentType<OfferEntity>[]> {
+    const offer = await this.offerModel
+      .aggregate([
+        {
+          $lookup: {
+            from: 'users',
+            let: { offerID: {$toString: '$_id'}, userEmail: email },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ['$email', '$$userEmail'] }
+                }
+              },
+              {
+                $replaceWith: {
+                  isFavorite: { $in: ['$$offerID', '$favorites'] }
+                }
+              }
+            ],
+            as: 'isFavorite'
+          }
+        },
+        {
+          $replaceRoot: {
+            newRoot: {
+              $mergeObjects: ['$$ROOT', { $arrayElemAt: ['$isFavorite', 0] }]
+            }
+          }
+        }
+      ])
       .sort({createdAt: SortType.Down})
-      .limit(offersCount)
-      .populate(['userId'])
+      .limit(count)
       .exec();
+
+    return offer;
   }
 
   public async create(dto: CreateOfferDTO): Promise<DocumentType<OfferEntity>> {
@@ -91,6 +121,33 @@ export class DefaultOfferService implements OfferService {
     const newRating = ((offer.rating + rate) / offer.numberOfComments).toFixed(1);
     return offer.updateOne({rating: newRating}, {new:true}).exec();
   }
-}
 
+  public async getFavorites(userEmail: string): Promise<DocumentType<OfferEntity>[] | null> {
+    const user = await this.userService.findByEmail(userEmail);
+    if(!user) {
+      return null;
+    }
+
+    const favorites = this.offerModel.find({_id: {$in: user.favorites}});
+    return favorites;
+  }
+
+  public async toggleFavorite(userEmail: string, offerId: string): Promise<DocumentType<UserEntity> | null> {
+    const user = await this.userService.findByEmail(userEmail);
+    if(!user?.favorites) {
+      return null;
+    }
+    const index = user.favorites.indexOf(offerId);
+    console.log(index);
+    if(index !== -1) {
+      user.favorites.splice(index);
+      this.logger.info(`Removing offer: ${offerId} from favorites`);
+    } else {
+      user.favorites.push(offerId);
+      this.logger.info(`Adding offer: ${offerId} to favorites`);
+    }
+    const updateResult = await this.userService.updateById(user.id, { favorites: user.favorites });
+    return updateResult;
+  }
+}
 

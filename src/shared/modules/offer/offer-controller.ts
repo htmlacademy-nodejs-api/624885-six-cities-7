@@ -38,6 +38,12 @@ export class OfferController extends BaseController {
       ]
     });
     this.addRoute({
+      path: '/favorites',
+      method: HttpMethod.Get,
+      handler: this.favorites,
+      middlewares: [ new PrivateRouteMiddleware() ]
+    });
+    this.addRoute({
       path: '/:id',
       method: HttpMethod.Get,
       handler: this.details,
@@ -67,11 +73,21 @@ export class OfferController extends BaseController {
         new DocumenExistsMiddleware(this.offerService, 'Offer', 'id')
       ]
     });
+    this.addRoute({
+      path: '/:id/favorite',
+      method: HttpMethod.Post,
+      handler: this.toggleFavorite,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('id')
+      ]
+    });
   }
 
   public async index(req: Request, res: Response): Promise<void> {
     const count = req.query.count ?? DEFAULT_OFFER_COUNT;
-    const offers = await this.offerService.find(+count);
+    const email = req.tokenPayload.email ?? '';
+    const offers = await this.offerService.find(email, +count);
     this.ok(res, fillDTO(OffersRdo, offers));
   }
 
@@ -98,5 +114,17 @@ export class OfferController extends BaseController {
 
     await this.commentService.deleteByOfferId(params.id);
     this.noContent(res, result);
+  }
+
+  public async favorites({ tokenPayload: { email }}: Request, res: Response): Promise<void> {
+    const favorites = await this.offerService.getFavorites(email);
+
+    this.ok(res, fillDTO(OffersRdo, favorites));
+  }
+
+  public async toggleFavorite({ params, tokenPayload }: Request<ParamOfferId>, res: Response): Promise<void> {
+    const favorite = await this.offerService.toggleFavorite(tokenPayload.email, params.id);
+
+    this.ok(res, fillDTO(OffersRdo, favorite));
   }
 }
