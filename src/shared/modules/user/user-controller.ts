@@ -5,7 +5,13 @@ import { inject, injectable } from 'inversify';
 import { fillDTO } from '../../helpers/common.js';
 import { Config, RestSchema } from '../../libs/config/index.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
-import { BaseController, HttpError, UploadFileMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import {
+  BaseController,
+  HttpError,
+  PrivateRouteMiddleware,
+  UploadFileMiddleware,
+  ValidateDtoMiddleware
+} from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
 import { HttpMethod } from '../../types/http-method.enum.js';
 import { AuthService } from '../auth/auth-service.interface.js';
@@ -44,11 +50,11 @@ export class UserController extends BaseController {
       middlewares: [new ValidateDtoMiddleware(LoginUserDto)]
     });
     this.addRoute({
-      path: '/:userId/avatar',
+      path: '/avatar',
       method: HttpMethod.Post,
       handler: this.uploadAvatar,
       middlewares: [
-        new ValidateObjectIdMiddleware('userId'),
+        new PrivateRouteMiddleware(),
         new UploadFileMiddleware(this.config.get('UPLOAD_DIRECTORY'), 'avatar')
       ]
     });
@@ -93,9 +99,10 @@ export class UserController extends BaseController {
     this.ok(res, fillDTO(LoggedUserRdo, foundedUser));
   }
 
-  public async uploadAvatar(req: Request, res: Response) {
+  public async uploadAvatar({ file, tokenPayload: { id }}: Request, res: Response) {
+    this.userService.updateById(id, {avatar: file?.path});
     this.created(res, {
-      filepath: req.file?.path
+      filepath: file?.path
     });
   }
 }
