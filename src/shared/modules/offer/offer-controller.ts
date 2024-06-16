@@ -75,8 +75,8 @@ export class OfferController extends BaseController {
     this.ok(res, fillDTO(OffersRdo, offers));
   }
 
-  public async create({ body }: Request<unknown, unknown, CreateOfferDTO>, res: Response): Promise<void> {
-    const result = await this.offerService.create(body);
+  public async create({ body, tokenPayload }: Request<unknown, unknown, CreateOfferDTO>, res: Response): Promise<void> {
+    const result = await this.offerService.create({...body, userId: tokenPayload.id});
 
     this.created(res, fillDTO(OffersRdo, result));
   }
@@ -87,8 +87,8 @@ export class OfferController extends BaseController {
     this.ok(res, fillDTO(DetailOffersRdo, result));
   }
 
-  public async update({ body, params}: Request<ParamOfferId, unknown, UpdateOfferDto>, res: Response): Promise<void> {
-    const result = await this.offerService.updateById(params.id, body);
+  public async update({ body, tokenPayload, params}: Request<ParamOfferId, unknown, UpdateOfferDto>, res: Response): Promise<void> {
+    const result = await this.offerService.updateById(params.id, {...body, userId: tokenPayload.id});
 
     this.ok(res, fillDTO(DetailOffersRdo, result));
   }

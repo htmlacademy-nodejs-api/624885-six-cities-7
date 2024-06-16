@@ -79,8 +79,7 @@ export class UpdateOfferDto {
   @IsEnum(GoodsType, { each: true, message: OfferValidationMessage.goods.invalidItems })
   public goods?: GoodsType[];
 
-  @IsMongoId({ message: OfferValidationMessage.userId.invalidId })
-  public userId?: string;
+  public userId: string;
 
   @IsPositive({ message: OfferValidationMessage.numberOfComments.invalidFormat })
   public numberOfComments?: number;
