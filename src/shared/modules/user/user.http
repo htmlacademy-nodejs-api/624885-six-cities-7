@@ -22,10 +22,16 @@ Content-Type: application/json
 }
 
 ###
+## Проверить токен пользователя
+GET http://localhost:5000/users/login HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Iml2bmlrb25AbWFpbC5ydSIsInVzZXJOYW1lIjoiaXZuaWtvbiIsImlkIjoiNjY2MDk2ZGY5NTVhMDlmNjU5NmJiNGQ3IiwiaWF0IjoxNzE4NTMyMDg1LCJleHAiOjE3MTg3MDQ4ODV9.x_3xu0XMY7eYgGLBkLMYwTOygvywel5J2Me3L7Nzyf4
+
+###
 ## Отправить изображение
 
-POST http://localhost:5000/users/666b4668456811eab6efd82a/avatar HTTP/1.1
+POST http://localhost:5000/users/avatar HTTP/1.1
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Iml2bmlrb25AbWFpbC5ydSIsInVzZXJOYW1lIjoiaXZuaWtvbiIsImlkIjoiNjY2MDk2ZGY5NTVhMDlmNjU5NmJiNGQ3IiwiaWF0IjoxNzE4NTMyMDg1LCJleHAiOjE3MTg3MDQ4ODV9.x_3xu0XMY7eYgGLBkLMYwTOygvywel5J2Me3L7Nzyf4
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="avatar"; filename="screen.png"

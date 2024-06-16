@@ -5,7 +5,6 @@ import {
   IsDefined,
   IsEnum,
   IsInt,
-  IsMongoId,
   IsNumber,
   IsPositive,
   IsString,
@@ -81,8 +80,6 @@ export class CreateOfferDTO {
   @IsEnum(GoodsType, { each: true, message: OfferValidationMessage.goods.invalidItems })
   public goods: GoodsType[];
 
-  @IsDefined({ message: 'Property required.'})
-  @IsMongoId({ message: OfferValidationMessage.userId.invalidId })
   public userId: string;
 
   @IsPositive({ message: OfferValidationMessage.numberOfComments.invalidFormat })

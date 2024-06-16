@@ -14,7 +14,7 @@ export interface UserEntity extends defaultClasses.Base {}
   }
 })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class UserEntity implements UserType {
+export class UserEntity {
   @prop({ unique: true, required: true })
   public email: string;
 
@@ -34,8 +34,10 @@ export class UserEntity implements UserType {
   })
   public userType: UserCategoryType;
 
-  @prop({ required: true, default: []})
-  public favorites: string[];
+  @prop({
+    type: () => [String]
+  })
+  public favorites?: string[];
 
   constructor(userData: UserType) {
     this.email = userData.email;
@@ -50,6 +52,12 @@ export class UserEntity implements UserType {
 
   public getPassword() {
     return this.password;
+  }
+
+  public verifyPassword(password: string, salt: string) {
+    const hash = createSHA256(password, salt);
+
+    return hash === this.password;
   }
 }
 

@@ -3,7 +3,7 @@ import { inject, injectable } from 'inversify';
 
 import { fillDTO } from '../../helpers/index.js';
 import { Logger } from '../../libs/logger/index.js';
-import { BaseController, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, PrivateRouteMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { DocumenExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
 import { Component, HttpMethod } from '../../types/index.js';
 import { CommentService } from '../comment/comment-service.interface.js';
@@ -32,7 +32,16 @@ export class OfferController extends BaseController {
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateDtoMiddleware(CreateOfferDTO)]
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateDtoMiddleware(CreateOfferDTO)
+      ]
+    });
+    this.addRoute({
+      path: '/favorites',
+      method: HttpMethod.Get,
+      handler: this.favorites,
+      middlewares: [ new PrivateRouteMiddleware() ]
     });
     this.addRoute({
       path: '/:id',
@@ -48,6 +57,7 @@ export class OfferController extends BaseController {
       method: HttpMethod.Patch,
       handler: this.update,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('id'),
         new DocumenExistsMiddleware(this.offerService, 'Offer', 'id'),
         new ValidateDtoMiddleware(UpdateOfferDto)
@@ -58,20 +68,31 @@ export class OfferController extends BaseController {
       method: HttpMethod.Delete,
       handler: this.delete,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('id'),
         new DocumenExistsMiddleware(this.offerService, 'Offer', 'id')
+      ]
+    });
+    this.addRoute({
+      path: '/:id/favorite',
+      method: HttpMethod.Post,
+      handler: this.toggleFavorite,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('id')
       ]
     });
   }
 
   public async index(req: Request, res: Response): Promise<void> {
     const count = req.query.count ?? DEFAULT_OFFER_COUNT;
-    const offers = await this.offerService.find(+count);
+    const email = req.tokenPayload.email ?? '';
+    const offers = await this.offerService.find(email, +count);
     this.ok(res, fillDTO(OffersRdo, offers));
   }
 
-  public async create({ body }: Request<unknown, unknown, CreateOfferDTO>, res: Response): Promise<void> {
-    const result = await this.offerService.create(body);
+  public async create({ body, tokenPayload }: Request<unknown, unknown, CreateOfferDTO>, res: Response): Promise<void> {
+    const result = await this.offerService.create({...body, userId: tokenPayload.id});
 
     this.created(res, fillDTO(OffersRdo, result));
   }
@@ -82,8 +103,8 @@ export class OfferController extends BaseController {
     this.ok(res, fillDTO(DetailOffersRdo, result));
   }
 
-  public async update({ body, params}: Request<ParamOfferId, unknown, UpdateOfferDto>, res: Response): Promise<void> {
-    const result = await this.offerService.updateById(params.id, body);
+  public async update({ body, tokenPayload, params}: Request<ParamOfferId, unknown, UpdateOfferDto>, res: Response): Promise<void> {
+    const result = await this.offerService.updateById(params.id, {...body, userId: tokenPayload.id});
 
     this.ok(res, fillDTO(DetailOffersRdo, result));
   }
@@ -93,5 +114,17 @@ export class OfferController extends BaseController {
 
     await this.commentService.deleteByOfferId(params.id);
     this.noContent(res, result);
+  }
+
+  public async favorites({ tokenPayload: { email }}: Request, res: Response): Promise<void> {
+    const favorites = await this.offerService.getFavorites(email);
+
+    this.ok(res, fillDTO(OffersRdo, favorites));
+  }
+
+  public async toggleFavorite({ params, tokenPayload }: Request<ParamOfferId>, res: Response): Promise<void> {
+    const favorite = await this.offerService.toggleFavorite(tokenPayload.email, params.id);
+
+    this.ok(res, fillDTO(OffersRdo, favorite));
   }
 }
