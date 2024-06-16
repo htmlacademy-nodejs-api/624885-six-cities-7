@@ -3,11 +3,12 @@ import { inject, injectable} from 'inversify';
 
 import { getMongoURI } from '../shared/helpers/database.js';
 import { Config, RestSchema } from '../shared/libs/config/index.js';
-import { DatabaseClient } from '../shared/libs/database-client/database-client.interface.js';
+import { DatabaseClient } from '../shared/libs/database-client/index.js';
 import { Logger } from '../shared/libs/logger/index.js';
 import { Controller, ExceptionFilter } from '../shared/libs/rest/index.js';
+import { ParseTokenMiddleware } from '../shared/libs/rest/middleware/parse-token.middleware.js';
 import { AuthExceptionFilter } from '../shared/modules/auth/auth-exception-filter.js';
-import { Component } from '../shared/types/component.enum.js';
+import { Component } from '../shared/types/index.js';
 import { UPLOAD_PATH } from './consts.js';
 
 @injectable()
@@ -39,12 +40,14 @@ export class RestApplication {
   }
 
   private async initMiddleware() {
+    const authenticateMiddleware = new ParseTokenMiddleware(this.config.get('JWT_SECRET'));
     this.server.use(express.json());
     this.server.use(
       UPLOAD_PATH,
       express.static(this.config.get('UPLOAD_DIRECTORY'))
     );
     this.server.use(express.urlencoded({extended: false}));
+    this.server.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
   }
 
   private async initControllers() {
