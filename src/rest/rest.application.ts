@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express, { Express } from 'express';
 import { inject, injectable} from 'inversify';
 
@@ -48,6 +49,7 @@ export class RestApplication {
     );
     this.server.use(express.urlencoded({extended: false}));
     this.server.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
+    this.server.use(cors());
   }
 
   private async initControllers() {
