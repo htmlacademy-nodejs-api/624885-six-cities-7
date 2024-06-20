@@ -86,7 +86,7 @@ export class OfferController extends BaseController {
 
   public async index(req: Request, res: Response): Promise<void> {
     const count = req.query.count ?? DEFAULT_OFFER_COUNT;
-    const email = req.tokenPayload.email ?? '';
+    const email = req.tokenPayload?.email ?? '';
     const offers = await this.offerService.find(email, +count);
     this.ok(res, fillDTO(OffersRdo, offers));
   }

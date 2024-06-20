@@ -25,7 +25,15 @@ export class DefaultOfferService implements OfferService {
     @inject(Component.UserService) private readonly userService: UserService
   ) {}
 
-  public async find(email: string, count: number,): Promise<DocumentType<OfferEntity>[]> {
+  public async find(email: string, count: number): Promise<DocumentType<OfferEntity>[]> {
+    if(email === '') {
+      return this.offerModel
+        .find()
+        .sort({createdAt: SortType.Down})
+        .limit(count)
+        .exec();
+    }
+
     const offer = await this.offerModel
       .aggregate([
         {
