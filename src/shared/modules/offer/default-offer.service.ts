@@ -138,7 +138,7 @@ export class DefaultOfferService implements OfferService {
       return null;
     }
     const index = user.favorites.indexOf(offerId);
-    console.log(index);
+
     if(index !== -1) {
       user.favorites.splice(index);
       this.logger.info(`Removing offer: ${offerId} from favorites`);

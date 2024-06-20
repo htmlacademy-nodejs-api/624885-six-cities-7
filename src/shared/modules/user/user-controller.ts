@@ -78,12 +78,12 @@ export class UserController extends BaseController {
     const newUser = req.body;
     const user = await this.authService.verify(newUser);
     const token = await this.authService.authenticate(user);
-    const responceData = fillDTO(LoggedUserRdo, {
+    const responseData = fillDTO(LoggedUserRdo, {
       email: user.email,
       token
     });
 
-    this.ok(res, responceData);
+    this.ok(res, responseData);
   }
 
   public async checkAuthenticate({ tokenPayload: { email } }: Request, res: Response) {
