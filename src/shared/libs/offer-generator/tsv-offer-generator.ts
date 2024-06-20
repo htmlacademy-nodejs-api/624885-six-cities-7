@@ -3,11 +3,11 @@ import dayjs from 'dayjs';
 import { cities } from '../../consts/consts.js';
 import {
   AdultsCount,
-  CommentsCount,
   Index,
+  INITIAL_COMMENTS_COUNT,
+  INITIAL_IS_FAVORITE,
   LocationShift,
   NUMBER_OF_PHOTOS, Price, Rating,
-  RatingDecimalNumbersCount,
   RoomsCount,
   WeekDay} from '../../consts/offer-consts.js';
 import { generateRandomValue, getRandomItem, getRandomItems } from '../../helpers/common.js';
@@ -30,8 +30,8 @@ export class TSVOfferGenerator implements OfferGenerator {
     const offerImages = Array.from({length: NUMBER_OF_PHOTOS},
       () => (`photo-${generateRandomValue(Index.First, Index.Last)}.jpg`)).join(';');
     const isPremium = getRandomItem<string>(['true', 'false']);
-    const isFavorite = getRandomItem<string>(['true', 'false']);
-    const rating = generateRandomValue(Rating.Min, Rating.Max, RatingDecimalNumbersCount).toString();
+    const isFavorite = INITIAL_IS_FAVORITE;
+    const rating = Rating.Initial.toString();
     const category = getRandomItem<string>([
       CategoryType.Apartment,
       CategoryType.Hotel,
@@ -54,7 +54,7 @@ export class TSVOfferGenerator implements OfferGenerator {
     const userEmail = getRandomItem<string>(this.mockData.userEmails);
     const userAvatar = `avatar-${generateRandomValue(Index.First, Index.Last)}.jpg`;
     const userType = getRandomItem<string>(['BASIC', 'PRO']);
-    const numberOfComments = generateRandomValue(CommentsCount.Min, CommentsCount.Max).toString();
+    const numberOfComments = INITIAL_COMMENTS_COUNT;
     const locationLatitudeDifference = generateRandomValue(LocationShift.Start, LocationShift.End) / LocationShift.Div;
     const locationLongitudeDifference = generateRandomValue(LocationShift.Start, LocationShift.End) / LocationShift.Div;
     const location = `${city.location.latitude + locationLatitudeDifference};${city.location.longitude + locationLongitudeDifference}`;

@@ -23,13 +23,10 @@ const enum Index {
   Last = 100
 }
 
-const RatingDecimalNumbersCount = 1;
-
-const NUMBER_OF_PHOTOS = 6;
-
 const enum Rating {
   Min = 1,
-  Max = 5
+  Max = 5,
+  Initial = 0
 }
 
 const enum RoomsCount {
@@ -42,10 +39,6 @@ const enum AdultsCount {
   Max = 10
 }
 
-const enum CommentsCount {
-  Min = 0,
-  Max = 100
-}
 
 const enum CommentsLength {
   Min = 5,
@@ -58,7 +51,12 @@ const enum LocationShift {
   Div = 100000
 }
 
+const INITIAL_COMMENTS_COUNT = '0';
+const INITIAL_IS_FAVORITE = false;
+const NUMBER_OF_PHOTOS = 6;
+
 export {
-  AdultsCount, CommentsCount, CommentsLength, DescriptionLength, Index, LocationShift,
-  NameLength, NUMBER_OF_PHOTOS, Price, Rating, RatingDecimalNumbersCount,
+  AdultsCount, CommentsLength, DescriptionLength, Index,
+  INITIAL_COMMENTS_COUNT, INITIAL_IS_FAVORITE, LocationShift,
+  NameLength, NUMBER_OF_PHOTOS, Price, Rating,
   RoomsCount, WeekDay};
