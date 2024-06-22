@@ -14,23 +14,23 @@ import {
 } from 'class-validator';
 
 import {
-  ADULTS_COUNT,
-  DESCRIPTION_LENGTH,
-  NAME_LENGTH,
-  PRICE,
-  RATING,
-  ROOMS_COUNT
+  AdultsCount,
+  DescriptionLength,
+  NameLength,
+  Price,
+  Rating,
+  RoomsCount
 } from '../../../consts/offer-consts.js';
 import { CategoryType, CityType, GoodsType, LocationType } from '../../../types/index.js';
 import { OfferValidationMessage } from '../index.js';
 
 export class UpdateOfferDto {
-  @MinLength(NAME_LENGTH.MIN, { message: OfferValidationMessage.name.minLength })
-  @MaxLength(NAME_LENGTH.MAX, { message: OfferValidationMessage.name.maxLength })
+  @MinLength(NameLength.Min, { message: OfferValidationMessage.name.minLength })
+  @MaxLength(NameLength.Max, { message: OfferValidationMessage.name.maxLength })
   public name?: string;
 
-  @MinLength(DESCRIPTION_LENGTH.MIN, { message: OfferValidationMessage.description.minLength })
-  @MaxLength(DESCRIPTION_LENGTH.MAX, { message: OfferValidationMessage.description.maxLength })
+  @MinLength(DescriptionLength.Min, { message: OfferValidationMessage.description.minLength })
+  @MaxLength(DescriptionLength.Max, { message: OfferValidationMessage.description.maxLength })
   public description?: string;
 
   @IsDateString({}, { message: OfferValidationMessage.postDate.invalidFormat})
@@ -52,26 +52,26 @@ export class UpdateOfferDto {
   public isFavorite?: boolean;
 
   @IsNumber({})
-  @Min(RATING.MIN, { message: OfferValidationMessage.rating.minValue })
-  @Max(RATING.MAX, { message: OfferValidationMessage.rating.maxValue })
+  @Min(Rating.Min, { message: OfferValidationMessage.rating.minValue })
+  @Max(Rating.Max, { message: OfferValidationMessage.rating.maxValue })
   public rating?: number;
 
   @IsEnum(CategoryType, { message: OfferValidationMessage.category.invalidFormat })
   public category?: CategoryType;
 
   @IsInt({ message: OfferValidationMessage.roomsNumber.invalidFormat })
-  @Min(ROOMS_COUNT.MIN, { message: OfferValidationMessage.roomsNumber.minValue })
-  @Max(ROOMS_COUNT.MAX, { message: OfferValidationMessage.roomsNumber.maxValue })
+  @Min(RoomsCount.Min, { message: OfferValidationMessage.roomsNumber.minValue })
+  @Max(RoomsCount.Max, { message: OfferValidationMessage.roomsNumber.maxValue })
   public roomsNumber?: number;
 
   @IsInt({ message: OfferValidationMessage.maxGuestsNumber.invalidFormat })
-  @Min(ADULTS_COUNT.MIN, { message: OfferValidationMessage.maxGuestsNumber.minValue })
-  @Max(ADULTS_COUNT.MAX, { message: OfferValidationMessage.maxGuestsNumber.maxValue })
+  @Min(AdultsCount.Min, { message: OfferValidationMessage.maxGuestsNumber.minValue })
+  @Max(AdultsCount.Max, { message: OfferValidationMessage.maxGuestsNumber.maxValue })
   public maxGuestsNumber?: number;
 
   @IsInt({ message: OfferValidationMessage.price.invalidFormat })
-  @Min(PRICE.MIN, { message: OfferValidationMessage.price.minValue })
-  @Max(PRICE.MAX, { message: OfferValidationMessage.price.maxValue })
+  @Min(Price.Min, { message: OfferValidationMessage.price.minValue })
+  @Max(Price.Max, { message: OfferValidationMessage.price.maxValue })
   public price?: number;
 
   @IsArray({ message: OfferValidationMessage.goods.invalidFormat })

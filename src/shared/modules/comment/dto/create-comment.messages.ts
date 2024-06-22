@@ -1,14 +1,14 @@
-import { COMMENTS_LENGTH, RATING } from '../../../consts/offer-consts.js';
+import { CommentsLength, Rating } from '../../../consts/offer-consts.js';
 
 export const CreateCommentMessages = {
   commentText: {
     invalidFormat: 'text is required',
-    lengthField: `min length is ${COMMENTS_LENGTH.MIN}, max is ${COMMENTS_LENGTH.MAX}`
+    lengthField: `min length is ${CommentsLength.Min}, max is ${CommentsLength.Max}`
   },
   rating: {
     invalidFormat: 'rating must be a integer',
-    minValue: `Minimum rating is ${RATING.MIN}`,
-    maxValue: `Maximum rating is ${RATING.MAX}`,
+    minValue: `Minimum rating is ${Rating.Min}`,
+    maxValue: `Maximum rating is ${Rating.Max}`,
   },
   offerId: {
     invalidFormat: 'offerId field must be a valid id'

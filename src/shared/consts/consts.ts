@@ -9,7 +9,7 @@ const CitiesListItems = {
   DUSSELDORF: 'Dusseldorf'
 } as const;
 
-export const CITIES: CityType[] = [
+export const cities: CityType[] = [
   {
     name: CitiesListItems.PARIS,
     location: {

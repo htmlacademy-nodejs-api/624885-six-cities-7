@@ -1,13 +1,15 @@
 import dayjs from 'dayjs';
 
-import { CITIES } from '../../consts/consts.js';
+import { cities } from '../../consts/consts.js';
 import {
-  ADULTS_COUNT,
-  INDEX,
-  LOCATION_SHIFT,
-  NUMBER_OF_PHOTOS, PRICE,
-  ROOMS_COUNT,
-  WEEK_DAY} from '../../consts/offer-consts.js';
+  AdultsCount,
+  Index,
+  INITIAL_COMMENTS_COUNT,
+  INITIAL_IS_FAVORITE,
+  LocationShift,
+  NUMBER_OF_PHOTOS, Price, Rating,
+  RoomsCount,
+  WeekDay} from '../../consts/offer-consts.js';
 import { generateRandomValue, getRandomItem, getRandomItems } from '../../helpers/common.js';
 import { CategoryType, CityType, GoodsType, MockServerDataType } from '../../types/index.js';
 import { OfferGenerator } from './offer-generator.interface.js';
@@ -21,24 +23,24 @@ export class TSVOfferGenerator implements OfferGenerator {
     const name = getRandomItem<string>(this.mockData.names);
     const description = getRandomItem<string>(this.mockData.descriptions);
     const postDate = dayjs()
-      .subtract(generateRandomValue(WEEK_DAY.FIRST, WEEK_DAY.LAST), 'day')
+      .subtract(generateRandomValue(WeekDay.First, WeekDay.Last), 'day')
       .toISOString();
-    const city = getRandomItem<CityType>(CITIES);
-    const previewImage = `preview-image-${generateRandomValue(INDEX.FIRST, INDEX.LAST)}.jpg`;
+    const city = getRandomItem<CityType>(cities);
+    const previewImage = `preview-image-${generateRandomValue(Index.First, Index.Last)}.jpg`;
     const offerImages = Array.from({length: NUMBER_OF_PHOTOS},
-      () => (`photo-${generateRandomValue(INDEX.FIRST, INDEX.LAST)}.jpg`)).join(';');
+      () => (`photo-${generateRandomValue(Index.First, Index.Last)}.jpg`)).join(';');
     const isPremium = getRandomItem<string>(['true', 'false']);
-    const isFavorite = false;
-    const rating = 0;
+    const isFavorite = INITIAL_IS_FAVORITE;
+    const rating = Rating.Initial.toString();
     const category = getRandomItem<string>([
       CategoryType.Apartment,
       CategoryType.Hotel,
       CategoryType.House,
       CategoryType.Room
     ]);
-    const roomsNumber = generateRandomValue(ROOMS_COUNT.MIN, ROOMS_COUNT.MAX).toString();
-    const maxGuestsNumber = generateRandomValue(ADULTS_COUNT.MIN, ADULTS_COUNT.MAX).toString();
-    const price = generateRandomValue(PRICE.MIN, PRICE.MAX).toString();
+    const roomsNumber = generateRandomValue(RoomsCount.Min, RoomsCount.Max).toString();
+    const maxGuestsNumber = generateRandomValue(AdultsCount.Min, AdultsCount.Max).toString();
+    const price = generateRandomValue(Price.Min, Price.Max).toString();
     const goods = getRandomItems<string>([
       GoodsType.AirConditioning,
       GoodsType.BabySeat,
@@ -50,12 +52,12 @@ export class TSVOfferGenerator implements OfferGenerator {
     ]).join(';');
     const userName = getRandomItem<string>(this.mockData.userNames);
     const userEmail = getRandomItem<string>(this.mockData.userEmails);
-    const userAvatar = `avatar-${generateRandomValue(INDEX.FIRST, INDEX.LAST)}.jpg`;
+    const userAvatar = `avatar-${generateRandomValue(Index.First, Index.Last)}.jpg`;
     const userType = getRandomItem<string>(['BASIC', 'PRO']);
-    const numberOfComments = 0;
-    const locationLatitudeDifference = generateRandomValue(LOCATION_SHIFT.START, LOCATION_SHIFT.END) / LOCATION_SHIFT.DIV;
-    const locationLongtitudeDifference = generateRandomValue(LOCATION_SHIFT.START, LOCATION_SHIFT.END) / LOCATION_SHIFT.DIV;
-    const location = `${city.location.latitude + locationLatitudeDifference};${city.location.longitude + locationLongtitudeDifference}`;
+    const numberOfComments = INITIAL_COMMENTS_COUNT;
+    const locationLatitudeDifference = generateRandomValue(LocationShift.Start, LocationShift.End) / LocationShift.Div;
+    const locationLongitudeDifference = generateRandomValue(LocationShift.Start, LocationShift.End) / LocationShift.Div;
+    const location = `${city.location.latitude + locationLatitudeDifference};${city.location.longitude + locationLongitudeDifference}`;
 
     return [
       name, description, postDate, city.name, previewImage, offerImages, isPremium, isFavorite,

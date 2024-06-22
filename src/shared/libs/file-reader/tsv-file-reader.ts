@@ -1,7 +1,7 @@
 import EventEmitter from 'node:events';
 import { createReadStream,ReadStream } from 'node:fs';
 
-import { CITIES } from '../../consts/consts.js';
+import { cities } from '../../consts/consts.js';
 import { CategoryType, CityType, GoodsType, LocationType, OfferType, UserCategoryType,UserType} from '../../types/index.js';
 import { stringToBoolean } from '../utils.js';
 import { FileReader } from './file-reader.interface.js';
@@ -66,7 +66,7 @@ export class TSVFileReader extends EventEmitter implements FileReader {
   }
 
   private parseCity(cityName: string): CityType {
-    const city = CITIES.find((cityItem) => cityItem.name === cityName);
+    const city = cities.find((cityItem) => cityItem.name === cityName);
     if(!city) {
       throw new Error('City not found');
     }
@@ -81,13 +81,13 @@ export class TSVFileReader extends EventEmitter implements FileReader {
   }
 
   private parseGoods(goodsString: string): GoodsType[] {
-    const goodsArray: GoodsType[] = [];
+    const goods: GoodsType[] = [];
     goodsString.split(';').forEach((good) => {
-      goodsArray.push(
+      goods.push(
         GoodsType[good as keyof typeof GoodsType]
       );
     });
-    return goodsArray;
+    return goods;
   }
 
   private parseUser(userName: string,
@@ -104,11 +104,11 @@ export class TSVFileReader extends EventEmitter implements FileReader {
   }
 
   private parseLocation(locationString: string): LocationType {
-    const locationArray = locationString.split(';');
+    const location = locationString.split(';');
 
     return {
-      latitude: Number(locationArray[0]),
-      longitude: Number(locationArray[1])
+      latitude: Number(location[0]),
+      longitude: Number(location[1])
     };
   }
 

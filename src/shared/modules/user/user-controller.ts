@@ -9,6 +9,7 @@ import {
   BaseController,
   HttpError,
   PrivateRouteMiddleware,
+  PublicRouteMiddleware,
   UploadFileMiddleware,
   ValidateDtoMiddleware
 } from '../../libs/rest/index.js';
@@ -36,7 +37,10 @@ export class UserController extends BaseController {
       path: '/register',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateDtoMiddleware(CreateUserDTO)]
+      middlewares: [
+        new PublicRouteMiddleware(),
+        new ValidateDtoMiddleware(CreateUserDTO)
+      ]
     });
     this.addRoute({
       path: '/login',
@@ -78,25 +82,28 @@ export class UserController extends BaseController {
     const newUser = req.body;
     const user = await this.authService.verify(newUser);
     const token = await this.authService.authenticate(user);
-    const responceData = fillDTO(LoggedUserRdo, {
+    const responseData = fillDTO(LoggedUserRdo, {
       email: user.email,
       token
     });
 
-    this.ok(res, responceData);
+    this.ok(res, responseData);
   }
 
-  public async checkAuthenticate({ tokenPayload: { email } }: Request, res: Response) {
-    const foundedUser = await this.userService.findByEmail(email);
+  public async checkAuthenticate({ tokenPayload }: Request, res: Response) {
+    if(tokenPayload?.email) {
+      const foundedUser = await this.userService.findByEmail(tokenPayload.email);
 
-    if(! foundedUser) {
-      throw new HttpError(
-        StatusCodes.UNAUTHORIZED,
-        'Unauthorized',
-        'UserController'
-      );
+      if(foundedUser) {
+        this.ok(res, fillDTO(LoggedUserRdo, foundedUser));
+        return;
+      }
     }
-    this.ok(res, fillDTO(LoggedUserRdo, foundedUser));
+    throw new HttpError(
+      StatusCodes.UNAUTHORIZED,
+      'Unauthorized',
+      'UserController'
+    );
   }
 
   public async uploadAvatar({ file, tokenPayload: { id }}: Request, res: Response) {

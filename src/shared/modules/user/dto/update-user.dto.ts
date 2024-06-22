@@ -1,6 +1,6 @@
 import { IsEmail, IsEnum, IsString, Length } from 'class-validator';
 
-import { PASSWORD_LENGTH, USER_NAME_LENGTH } from '../../../consts/user-consts.js';
+import { PasswordLength, UserNameLength } from '../../../consts/user-consts.js';
 import { UserCategoryType } from '../../../types/index.js';
 import { CreateUserMessages } from './create-user.messages.js';
 
@@ -13,16 +13,16 @@ export class UpdateUserDTO {
 
   @IsString({ message: CreateUserMessages.name.invalidFormat })
   @Length(
-    USER_NAME_LENGTH.MIN,
-    USER_NAME_LENGTH.MAX,
+    UserNameLength.Min,
+    UserNameLength.Max,
     { message: CreateUserMessages.name.lengthField }
   )
   public name?: string;
 
   @IsString({ message: CreateUserMessages.password.invalidFormat })
   @Length(
-    PASSWORD_LENGTH.MIN,
-    PASSWORD_LENGTH.MAX,
+    PasswordLength.Min,
+    PasswordLength.Max,
     { message: CreateUserMessages.password.lengthField }
   )
   public password?: string;

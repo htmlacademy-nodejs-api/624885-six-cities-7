@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import { DocumentExists, HttpError, Middleware } from '../index.js';
 
-export class DocumenExistsMiddleware implements Middleware {
+export class DocumentExistsMiddleware implements Middleware {
   constructor(
     private readonly service: DocumentExists,
     private readonly entityName: string,

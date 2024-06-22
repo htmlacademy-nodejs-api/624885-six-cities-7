@@ -1,4 +1,4 @@
-import { PASSWORD_LENGTH, USER_NAME_LENGTH } from '../../../consts/user-consts.js';
+import { PasswordLength, UserNameLength } from '../../../consts/user-consts.js';
 import { UserCategoryType } from '../../../types/user-category.type.js';
 
 export const CreateUserMessages = {
@@ -10,11 +10,11 @@ export const CreateUserMessages = {
   },
   name: {
     invalidFormat: 'name must be a string',
-    lengthField: `min length is ${USER_NAME_LENGTH.MIN}, max is ${USER_NAME_LENGTH.MAX}`,
+    lengthField: `min length is ${UserNameLength.Min}, max is ${UserNameLength.Max}`,
   },
   password: {
     invalidFormat: 'password must be a string',
-    lengthField: `min length for password is ${PASSWORD_LENGTH.MIN}, max is ${PASSWORD_LENGTH.MAX}`
+    lengthField: `min length for password is ${PasswordLength.Min}, max is ${PasswordLength.Max}`
   },
   userType: {
     invalidFormat: `userType must be ${UserCategoryType.BASIC} or ${UserCategoryType.PRO}`
